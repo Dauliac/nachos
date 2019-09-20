@@ -88,18 +88,15 @@ ConsoleTest (const char *in, const char *out)
     readAvail = new Semaphore ("read avail", 0);
     writeDone = new Semaphore ("write done", 0);
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
+
     for (;;)
       {
 	  readAvail->P ();	// wait for character to arrive
 	  ch = console->GetChar ();
-      console->PutChar ('<');
-      writeDone->P (); 
 	  console->PutChar (ch);	// echo it!
-	  writeDone->P ();
-      console->PutChar ('>');
-      writeDone->P ();	// wait for write to finish
+	  writeDone->P ();	// wait for write to finish
 	  if (ch == 'q') {
-	      printf ("Salut\n Nothing more, bye!\n");
+	      printf ("Nothing more, bye!\n");
 	      break;		// if q, quit
 	  }
       }
