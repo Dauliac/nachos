@@ -1,4 +1,4 @@
-fdef CHANGED
+#ifdef CHANGED
 #include "copyright.h"
 #include "system.h"
 #include "synchconsole.h"
@@ -11,7 +11,7 @@ SynchConsole::SynchConsole(const char *in, const char *out)
 {
     readAvail = new Semaphore("read avail", 0);
     writeDone = new Semaphore("write done", 0);
-    console = ...
+    console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
 }
 SynchConsole::~SynchConsole()
 {
@@ -21,11 +21,13 @@ SynchConsole::~SynchConsole()
 }
 void SynchConsole::SynchPutChar(int ch)
 {
-    // ...
+    console->PutChar(ch);
+    writeDone->P();
 }
 int SynchConsole::SynchGetChar()
 {
-    // ...
+    readAvail->P (); // wait for character to arrive
+    return console->GetChar ();
 }
 void SynchConsole::SynchPutString(const char s[])
 {
@@ -35,4 +37,5 @@ void SynchConsole::SynchGetString(char *s, int n)
 {
 // ...
 }
+
 #endif // CHANGED
