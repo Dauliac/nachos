@@ -1,6 +1,6 @@
 # TD Natchos
 
-## Autheurs
+## Auteurs
 - Julien Dauliac
 - Thomas Veloso
 
