@@ -6,6 +6,7 @@ gitignore.io help:
 *.swp
 *.axp
 *.un~
+:w
 
 ### C ###
 # Prerequisites

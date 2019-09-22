@@ -116,6 +116,7 @@ main (int argc, char **argv)
 	  if (!strcmp (*argv, "-x"))
 	    {			// run a user program
 		ASSERT (argc > 1);
+		// Synchconsole = SynchConsole (NULL, NULL);
 		StartProcess (*(argv + 1));
 		argCount = 2;
 	    }
@@ -131,16 +132,17 @@ main (int argc, char **argv)
 		  }
 	    }
       else if (!strcmp (*argv, "-sc"))
-	    {			// test the synch console
+	    {			// test the synchconsole
 		if (argc == 1)
 		    SynchConsoleTest (NULL, NULL);
 		else
 		  {
 		      ASSERT (argc > 2);
-		      SynchConsoleTest  (*(argv + 1), *(argv + 2));
+		      SynchConsoleTest (*(argv + 1), *(argv + 2));
 		      argCount = 3;
 		  }
 	    }
+
 #endif // USER_PROGRAM
 #ifdef FILESYS
 	  if (!strcmp (*argv, "-cp"))
