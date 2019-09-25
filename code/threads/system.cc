@@ -10,6 +10,7 @@
 #include <locale.h>
 #ifdef __GLIBC__
 #include <malloc.h>
+
 #endif
 
 // This defines *all* of the global data structures used by Nachos.
@@ -22,11 +23,11 @@ Interrupt *interrupt;		// interrupt status
 Statistics *stats;		// performance metrics
 Timer *timer;			// the hardware timer device,
 					// for invoking context switches
-// #ifdef CHANGED
-// #ifdef USER_PROGRAM
-// SynchConsole*synchconsole;
-// #endif
-// #endif
+#ifdef CHANGED
+#ifdef USER_PROGRAM
+SynchConsole*synchconsole;
+#endif
+#endif //CHANGED
 
 #ifdef FILESYS_NEEDED
 FileSystem *fileSystem;

@@ -126,7 +126,12 @@ SynchConsoleTest (const char *in, const char *out)
         test_synchconsole->SynchPutChar('<');
         test_synchconsole->SynchPutChar(ch);
         test_synchconsole->SynchPutChar('>');
+        if (ch == 'q') {
+	      printf ("Au revoir\nNothing more, bye!\n");
+	      break;		// if q, quit
+	    }
     }
+    delete test_synchconsole;
     fprintf(stderr, "EOF detected in SynchConsole!\n");
 }
 

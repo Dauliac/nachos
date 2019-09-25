@@ -5,7 +5,7 @@
 - Thomas Veloso
 
 ## Avancement
-*@Juliendauliac* `Action III.6.`: `./nachos -sc` marche et ajoute les chevrons
+*@Juliendauliac* `Action V.2`: Fix SynchConsole::SynchPutString
 
 ## Sujet
 - [TD 1](http://dept-info.labri.fr/~guermouc/SE/files/devoir0.pdf)
