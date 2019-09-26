@@ -121,11 +121,14 @@ SynchConsoleTest (const char *in, const char *out)
     char ch;
     SynchConsole *test_synchconsole = new SynchConsole(in, out);
 
+    /*it works!
+    char chTest[2] = {'a', 'b'};
+    test_synchconsole->SynchPutString(chTest);*/
 
     while ((ch = test_synchconsole->SynchGetChar()) != EOF) {
         test_synchconsole->SynchPutChar('<');
         test_synchconsole->SynchPutChar(ch);
-        test_synchconsole->SynchPutChar('>');
+        test_synchconsole->SynchPutChar('>'); 
         if (ch == 'q') {
 	      printf ("Au revoir\nNothing more, bye!\n");
 	      break;		// if q, quit

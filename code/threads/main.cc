@@ -136,7 +136,9 @@ main (int argc, char **argv)
       else if (!strcmp (*argv, "-sc"))
 	    {			// test the console
 		if (argc == 1)
-		    SynchConsoleTest (NULL, NULL);
+		{
+		    SynchConsoleTest (NULL, NULL);	
+		}		
 		else
 		  {
 		      ASSERT (argc > 2);
