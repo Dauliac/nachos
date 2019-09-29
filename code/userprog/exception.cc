@@ -84,8 +84,9 @@ ExceptionHandler (ExceptionType which)
 #ifdef CHANGED
         case SC_PutChar:
 		  {
-		    DEBUG ('s', "PutChar.\n");
-		    interrupt->Halt ();
+		    DEBUG ('s', "PutChar, by user program.\n");
+            char character = (char)machine->ReadRegister(4);
+		    synchconsole->SynchPutChar(character);
 		    break;
 		  }
 #endif // CHANGED

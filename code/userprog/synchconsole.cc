@@ -41,20 +41,34 @@ void SynchConsole::SynchGetString(char *s, int n)
 {
 // ...
 }
-int SynchConsole::copyStringFromMachine(int from,char *to, unsigned size)
+
+int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
 {
+    // size: size of string
+    //
     //bool ReadMem(int addr, int size, int* value);
-    int buffer = size;
-    int out;
-    int i = 0;
-    for(from+i; i<size; i++)
-    {
-        
-        
+    // int buffer = size;
+    // int out;
+    // int i = 0;
+    // for(from+i; i<size; i++)
+    // {
+
+    // }
+    // machine->ReadMem(from, size, &out);
+    // to = (char)out;
+
+    unsigned int i;
+    // buffer
+    int character;
+    for(i = 0; i < size - 1; i++) {
+        // Readmem copy
+        machine->ReadMem(from + i, 1, &character);
+
+        if ((char)character == '\0') break;
+        to[i] = (char)character;
     }
-    machine->ReadMem(from, size, &out);
-    to = (char)out;
-    
+    to[i] = '\0';
+    return i;
 }
 
 #endif // CHANGED

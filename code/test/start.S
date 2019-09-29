@@ -66,6 +66,8 @@ Halt:
 	j	$31
 	.end Halt
 
+; Syscall putchar
+
 	.globl PutChar
 	.ent	PutChar
 PutChar:
