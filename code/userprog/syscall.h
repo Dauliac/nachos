@@ -31,7 +31,12 @@
 #define SC_Close	8
 #define SC_Fork		9
 #define SC_Yield	10
-#define SC_PutChar	11
+
+#ifdef CHANGED
+	#define SC_PutChar	11
+	#define SC_PutString	12
+#endif //CHANGED
+
 
 #ifdef IN_USER_MODE
 
@@ -136,6 +141,8 @@ void Yield ();
  * take a char and put it into terminal
  */
 void PutChar(char c);
+
+void PutString(char *s);
 
 #endif // CHANGED
 

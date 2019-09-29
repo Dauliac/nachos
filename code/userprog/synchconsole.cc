@@ -3,7 +3,7 @@
 #include "system.h"
 #include "synchconsole.h"
 #include "synch.h"
-#include "machine.h"
+
 static Semaphore *readAvail;
 static Semaphore *writeDone;
 static void ReadAvailHandler(void *arg) { (void) arg; readAvail->V(); }
@@ -13,7 +13,7 @@ SynchConsole::SynchConsole(const char *in, const char *out)
     readAvail = new Semaphore("read avail", 0);
     writeDone = new Semaphore("write done", 0);
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-    machine = new Machine(TRUE);
+    //machine = new Machine(TRUE);
 }
 SynchConsole::~SynchConsole()
 {
@@ -43,18 +43,18 @@ void SynchConsole::SynchGetString(char *s, int n)
 }
 int SynchConsole::copyStringFromMachine(int from,char *to, unsigned size)
 {
-    //bool ReadMem(int addr, int size, int* value);
-    int buffer = size;
-    int out;
-    int i = 0;
-    for(from+i; i<size; i++)
-    {
-        
-        
-    }
-    machine->ReadMem(from, size, &out);
-    to = (char)out;
-    
+    unsigned i = 0;
+	int res;
+	
+	while((i<size) && (machine->ReadMem(from+i,1,&res)) && ((char)res!='\0'))
+	{
+		to[i] = (char)res;
+		i++;
+	}
+	
+	to[i] = '\0';
+
+	return i+2;
 }
 
 #endif // CHANGED

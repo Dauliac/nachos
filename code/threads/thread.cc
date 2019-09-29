@@ -24,7 +24,6 @@
 #include "machine.h"
 #endif
 
-
 #define STACK_FENCEPOST 0xdeadbeef	// this is put at the top of the
 					// execution stack, for detecting 
 					// stack overflows

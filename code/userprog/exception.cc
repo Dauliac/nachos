@@ -84,10 +84,30 @@ ExceptionHandler (ExceptionType which)
 #ifdef CHANGED
         case SC_PutChar:
 		  {
+			int c = machine->ReadRegister(4);
+			synchconsole->SynchPutChar((char)c);
 		    DEBUG ('s', "PutChar.\n");
 		    interrupt->Halt ();
 		    break;
 		  }
+
+		case SC_PutString:
+		{
+			int result;
+			int from;
+			char to[MAX_STRING_SIZE];
+
+			from = machine->ReadRegister(4);
+
+			result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
+			
+			DEBUG('s',"appel système de la fonction SynchPutString\n");
+
+			synchconsole->SynchPutString(to);
+
+			break;			
+		}
+
 #endif // CHANGED
 		default:
 		  {
