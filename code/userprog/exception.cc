@@ -84,10 +84,9 @@ ExceptionHandler (ExceptionType which)
 #ifdef CHANGED
         case SC_PutChar:
 		  {
-			int c = machine->ReadRegister(4);
-			synchconsole->SynchPutChar((char)c);
-		    DEBUG ('s', "PutChar.\n");
-		    interrupt->Halt ();
+		    DEBUG ('s', "PutChar, by user program.\n");
+            char character = (char)machine->ReadRegister(4);
+		    synchconsole->SynchPutChar(character);
 		    break;
 		  }
 
@@ -100,12 +99,12 @@ ExceptionHandler (ExceptionType which)
 			from = machine->ReadRegister(4);
 
 			result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
-			
+
 			DEBUG('s',"appel système de la fonction SynchPutString\n");
 
 			synchconsole->SynchPutString(to);
 
-			break;			
+			break;
 		}
 
 #endif // CHANGED

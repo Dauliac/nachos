@@ -3,24 +3,25 @@
 #include "system.h"
 #include "synchconsole.h"
 #include "synch.h"
-
+#include "machine.h"
 static Semaphore *readAvail;
 static Semaphore *writeDone;
-static Semaphore *semaphoreSynchPutChar;
-static Semaphore *semaphoreSynchGetChar;
-
 static void ReadAvailHandler(void *arg) { (void) arg; readAvail->V(); }
 static void WriteDoneHandler(void *arg) { (void) arg; writeDone->V(); }
+
+static Semaphore *mutex_getChar;
+static Semaphore *mutex_putChar;
 
 SynchConsole::SynchConsole(const char *in, const char *out)
 {
     readAvail = new Semaphore("read avail", 0);
     writeDone = new Semaphore("write done", 0);
-    semaphoreSynchPutChar = new Semaphore("SynchPutChar", 1);
-    semaphoreSynchGetChar = new Semaphore("SynchGetChar", 1);
-
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-    //machine = new Machine(TRUE);
+    machine = new Machine(TRUE);
+    mutex_getChar = new Semaphore("PutChar", 1);
+    mutex_putChar = new Semaphore("GetChar", 1);
+
+
 }
 SynchConsole::~SynchConsole()
 {
@@ -30,17 +31,17 @@ SynchConsole::~SynchConsole()
 }
 void SynchConsole::SynchPutChar(int ch)
 {
-    semaphoreSynchPutChar->P();
+    mutex_putChar->P();
     console->PutChar(ch);
     writeDone->P();
-    semaphoreSynchPutChar->V();
+    mutex_putChar->V();
 }
 int SynchConsole::SynchGetChar()
 {
-    semaphoreSynchGetChar->P();
+    // mutex_getChar->P();
     readAvail->P (); // wait for character to arrive
     int ch = (int)console->GetChar();
-    semaphoreSynchGetChar->V();
+    // mutex_getChar->V();
     return ch;
 }
 void SynchConsole::SynchPutString(const char s[])
@@ -56,20 +57,6 @@ void SynchConsole::SynchGetString(char *s, int n)
 
 int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
 {
-<<<<<<< HEAD
-    unsigned i = 0;
-	int res;
-	
-	while((i<size) && (machine->ReadMem(from+i,1,&res)) && ((char)res!='\0'))
-	{
-		to[i] = (char)res;
-		i++;
-	}
-	
-	to[i] = '\0';
-
-	return i+2;
-=======
     // size: size of string
     //
     //bool ReadMem(int addr, int size, int* value);
@@ -95,7 +82,6 @@ int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
     }
     to[i] = '\0';
     return i;
->>>>>>> SynchPutString
 }
 
 #endif // CHANGED
