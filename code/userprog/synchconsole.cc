@@ -56,20 +56,6 @@ void SynchConsole::SynchGetString(char *s, int n)
 
 int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
 {
-<<<<<<< HEAD
-    unsigned i = 0;
-	int res;
-	
-	while((i<size) && (machine->ReadMem(from+i,1,&res)) && ((char)res!='\0'))
-	{
-		to[i] = (char)res;
-		i++;
-	}
-	
-	to[i] = '\0';
-
-	return i+2;
-=======
     // size: size of string
     //
     //bool ReadMem(int addr, int size, int* value);
@@ -95,7 +81,6 @@ int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
     }
     to[i] = '\0';
     return i;
->>>>>>> SynchPutString
 }
 
 #endif // CHANGED
