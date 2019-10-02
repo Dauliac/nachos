@@ -44,8 +44,8 @@ Console::Console(const char *readFile, const char *writeFile, VoidFunctionPtr re
 {
     if (readFile == NULL)
     {
-	ASSERT(!stdin_busy);
-	stdin_busy = 1;
+	//ASSERT(!stdin_busy);
+	//stdin_busy = 1;
 	readFileNo = 0;					// keyboard = stdin
     }
     else
