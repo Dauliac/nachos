@@ -64,9 +64,9 @@ int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
         i++;
     }
 
-    to[i] = '\0';
+    to[i + 1] = '\0';
 
-    return i+2;
+    return i;
 
     // unsigned int i;
     // // buffer

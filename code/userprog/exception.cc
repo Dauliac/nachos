@@ -99,12 +99,21 @@ ExceptionHandler (ExceptionType which)
 			from = machine->ReadRegister(4);
 
 			result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
-
 			DEBUG('s',"appel système de la fonction SynchPutString\n");
-
+			printf("taille de la string %i",result);
 			synchconsole->SynchPutString(to);
 
 			break;
+		}
+
+		case SC_Exit:
+		{
+			int result = machine->ReadRegister (4);
+			if (result != 0)
+			{
+				printf("Error code %i", result);
+			}
+			interrupt->Halt ();
 		}
 
 #endif // CHANGED

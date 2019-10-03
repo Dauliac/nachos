@@ -2,8 +2,9 @@
 int 
 main()
 {
-	PutString("Voici une phrase\n");
-	PutString("Voilà une deuxième phrase\n");
-	PutString("Une dernière et je quitte le programme\n");
+	PutString("Salut\ne");
+	//PutString("Voilà une deuxième phrase\n");
+	//PutString("Une dernière et je quitte le programme\n");
+	Halt();
 	return 0;
 }
