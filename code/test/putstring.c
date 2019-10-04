@@ -1,10 +1,10 @@
 #include "syscall.h"
-int 
+int
 main()
 {
-	PutString("Salut\ne");
+	PutString("Sal\nut\ne");
 	//PutString("Voilà une deuxième phrase\n");
 	//PutString("Une dernière et je quitte le programme\n");
-	Halt();
+	/* Halt(); */
 	return 0;
 }

@@ -111,7 +111,7 @@ ExceptionHandler (ExceptionType which)
 			int result = machine->ReadRegister (4);
 			if (result != 0)
 			{
-				printf("Error code %i", result);
+				printf("Error code %i\n", result);
 			}
 			interrupt->Halt ();
 		}
