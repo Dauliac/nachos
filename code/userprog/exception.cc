@@ -105,6 +105,14 @@ ExceptionHandler (ExceptionType which)
 
 			break;
 		}
+		
+		case SC_GetChar:
+		{
+		    DEBUG ('s', "GetChar, by user program.\n");
+            int result = synchconsole->SynchGetChar();
+			machine->WriteRegister(2,result);
+		    break;
+		}
 
 		case SC_Exit:
 		{

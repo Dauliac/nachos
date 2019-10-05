@@ -35,6 +35,7 @@
 #ifdef CHANGED
 	#define SC_PutChar	11
 	#define SC_PutString	12
+	#define SC_GetChar	13
 #endif //CHANGED
 
 
@@ -143,6 +144,8 @@ void Yield ();
 void PutChar(char c);
 
 void PutString(char *s);
+
+int GetChar();
 
 #endif // CHANGED
 
