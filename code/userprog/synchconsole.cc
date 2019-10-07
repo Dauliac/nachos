@@ -46,7 +46,7 @@ int SynchConsole::SynchGetChar()
 void SynchConsole::SynchPutString(const char s[])
 {
     int l = strlen(s);
-    for(long i = 0; i < l; i++)
+    for(long i = 0; i < l+1; i++)
         SynchPutChar(s[i]);
 }
 void SynchConsole::SynchGetString(char *s, int n)
@@ -58,10 +58,11 @@ int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
 {
     unsigned i = 0;
     int res;
-    while((i<size) && (machine->ReadMem(from+i,1,&res)) && ((char)res!='\0'))
+    while((i<size) && (machine->ReadMem(from+i,1,&res)) && (((char)res!='\0') && ((char)res!=EOF)))
     {
         to[i] = (char)res;
         i++;
+
     }
 
     to[i + 1] = '\0';
