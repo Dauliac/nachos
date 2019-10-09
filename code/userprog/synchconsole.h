@@ -14,6 +14,7 @@ class SynchConsole:dontcopythis {
         void SynchPutString(const char *s); // Unix fputs(3S)
         void SynchGetString(char *s, int n);       // Unix fgets(3S)
         int copyStringFromMachine(int from,char *to, unsigned size);
+		void copyStringToMachine(char *from,int to, unsigned size);
     private:
         Console *console;
 };

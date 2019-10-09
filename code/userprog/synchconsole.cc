@@ -46,27 +46,37 @@ int SynchConsole::SynchGetChar()
 void SynchConsole::SynchPutString(const char s[])
 {
     int l = strlen(s);
-    for(long i = 0; i < l+1; i++)
-        SynchPutChar(s[i]);
+	printf("taille du tableau : %i\n",l);
+	int i =0;
+	while((char)s[i] != '\0')
+	{
+		SynchPutChar(s[i]);
+		i++;
+	}
+	
 }
 void SynchConsole::SynchGetString(char *s, int n)
 {
-// ...
+	int result;
+	int i =0;
+	while((i<n) && (result=SynchGetChar()) && ((char)result!='\0'))
+	{
+		s[i] = (char)result;
+		printf("salut : %i\n",i);
+		i++;
+	}
 }
 
-int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
+int SynchConsole::copyStringFromMachine(int from,char *to, unsigned size)
 {
     unsigned i = 0;
     int res;
-    while((i<size) && (machine->ReadMem(from+i,1,&res)) && (((char)res!='\0') && ((char)res!=EOF)))
+    while((i<size) && (machine->ReadMem(from+i,1,&res)) && ((char)res!='\0'))
     {
         to[i] = (char)res;
         i++;
-
     }
-
-    to[i + 1] = '\0';
-
+    to[i] = '\0';
     return i;
 
     // unsigned int i;
@@ -81,6 +91,19 @@ int SynchConsole::copyStringFromMachine(int from,char *to, unsigned int size)
     // }
     // to[i] = '\0';
     // return i;
+}
+
+void SynchConsole::copyStringToMachine(char *from, int to,unsigned size)
+{
+	unsigned i = 0;
+	int res;
+	while((i<size) && (from[i] != '\0'))
+	{
+		res = (int)from[i];
+		machine->WriteMem(to+i,1,res);
+		i++;
+	}
+	machine->WriteMem(to+i,1,'\0');
 }
 
 #endif // CHANGED

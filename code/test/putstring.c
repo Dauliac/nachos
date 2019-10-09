@@ -2,7 +2,7 @@
 int
 main()
 {
-	PutString("salut\n");
+	PutString("t");
 	//PutString("Voilà une deuxième phrase\n");
 	//PutString("Une dernière et je quitte le programme\n");
 	/* Halt(); */

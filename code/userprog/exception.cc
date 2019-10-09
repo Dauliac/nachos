@@ -94,23 +94,35 @@ ExceptionHandler (ExceptionType which)
 		{
 			int result;
 			int from;
-			char to[MAX_STRING_SIZE];
+			char* to = new char[MAX_STRING_SIZE];
 
 			from = machine->ReadRegister(4);
 
-			result = synchconsole->copyStringFromMachine(from, to, MAX_STRING_SIZE);
+			result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
 			DEBUG('s',"appel système de la fonction SynchPutString\n");
 			synchconsole->SynchPutString(to);
-
+			delete[] to;
 			break;
 		}
-
+		
 		case SC_GetChar:
 		{
 		    DEBUG ('s', "GetChar, by user program.\n");
             int result = synchconsole->SynchGetChar();
 			machine->WriteRegister(2,result);
 		    break;
+		}
+		
+		case SC_GetString:
+		{
+			int to, n;
+			to = machine->ReadRegister(4);
+			n = machine->ReadRegister(5);
+			char* from = new char[n];
+			synchconsole->SynchGetString(from,MAX_STRING_SIZE);
+			synchconsole->copyStringToMachine(from,to,MAX_STRING_SIZE);
+			delete[] from;
+			break;
 		}
 
 		case SC_Exit:
