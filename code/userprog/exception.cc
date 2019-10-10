@@ -92,8 +92,10 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_PutString:
 		{
+			// The test "result == MAX_STRING_SIZE" do not work at the first iteration if the string is inferior than MAX_STRING_SIZE
 			int result = MAX_STRING_SIZE;
 			int from;
+
 			//char* to = new char[MAX_STRING_SIZE];
 
 			from = machine->ReadRegister(4);
