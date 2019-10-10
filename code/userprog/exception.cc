@@ -92,16 +92,54 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_PutString:
 		{
-			int result;
+			int result = MAX_STRING_SIZE;
 			int from;
-			char* to = new char[MAX_STRING_SIZE];
+			//char* to = new char[MAX_STRING_SIZE];
 
 			from = machine->ReadRegister(4);
 
-			result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
-			DEBUG('s',"appel système de la fonction SynchPutString\n");
+			/*result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
+			printf("valeur de result %i\n",result);
 			synchconsole->SynchPutString(to);
 			delete[] to;
+			to = new char[MAX_STRING_SIZE];
+			result = synchconsole->copyStringFromMachine(from+MAX_STRING_SIZE,to,MAX_STRING_SIZE);
+			printf("2ème valeur de result %i\n",result);
+			synchconsole->SynchPutString(to);*/
+			for(int i=0; result == MAX_STRING_SIZE; i+=MAX_STRING_SIZE)
+			{
+				char* to = new char[MAX_STRING_SIZE];
+				result = synchconsole->copyStringFromMachine(from+i,to,MAX_STRING_SIZE);
+				//printf("valeur de result %i\n",i);
+				synchconsole->SynchPutString(to);
+				delete[] to;
+			}
+			/*result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
+			while(i=0, i<MAX_STRING_SIZE+i){
+				buf_str = to[i:MAX_STRING_SIZE+i];
+				i += MAX_STRING_SIZE;
+			}*/
+			/*while(result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE) >= MAX_STRING_SIZE)
+			{
+				synchconsole->SynchPutString(to);
+				delete[] to;
+				to = new char[MAX_STRING_SIZE];
+				i++;
+			}
+			if(i==0)
+			{
+				synchconsole->SynchPutString(to);
+			}*/
+			/*while(i =0){
+				char* to = new char[MAX_STRING_SIZE];
+				result = synchconsole->copyStringFromMachine(from, to,MAX_STRING_SIZE);
+				synchconsole->SynchPutString(to);
+				printf("Taille de la string %i", result);
+				if(result < MAX_STRING_SIZE) break;
+			}*/
+			DEBUG('s',"appel système de la fonction SynchPutString\n");
+			//synchconsole->SynchPutString(to);
+			//delete[] to;
 			break;
 		}
 		
@@ -118,7 +156,7 @@ ExceptionHandler (ExceptionType which)
 			int to, n;
 			to = machine->ReadRegister(4);
 			n = machine->ReadRegister(5);
-			char* from = new char[n];
+			char* from = new char[MAX_STRING_SIZE];
 			synchconsole->SynchGetString(from,MAX_STRING_SIZE);
 			synchconsole->copyStringToMachine(from,to,MAX_STRING_SIZE);
 			delete[] from;

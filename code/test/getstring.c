@@ -2,12 +2,12 @@
 int
 main()
 {
-	int n = 150;
+	int n = 10;
 	char s[n];
 	
 	GetString(s,n);
 
-	//PutString(s);
+	PutString(s);
 
 	return 0;
 }

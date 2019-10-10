@@ -40,13 +40,14 @@ int SynchConsole::SynchGetChar()
     // semaphoreSynchGetChar->P();
     readAvail->P (); // wait for character to arrive
     int ch = (int)console->GetChar();
+	//printf("coucou : %i\n",ch);
     // semaphoreSynchGetChar->V();
     return ch;
 }
 void SynchConsole::SynchPutString(const char s[])
 {
     int l = strlen(s);
-	printf("taille du tableau : %i\n",l);
+	//printf("taille du tableau : %i\n",l);
 	int i =0;
 	while((char)s[i] != '\0')
 	{
@@ -59,11 +60,23 @@ void SynchConsole::SynchGetString(char *s, int n)
 {
 	int result;
 	int i =0;
-	while((i<n) && (result=SynchGetChar()) && ((char)result!='\0'))
+	while((i<n) && (result=SynchGetChar()) && ((char)result!='\0') && ((char)result!='\n') && ((char)result!=EOF))
 	{
+		/*if(!result || (char)result == '\0' || (char)result == EOF)
+		{
+			printf("work it out : %i\n",i);
+			break;
+		}*/
+		//result = SynchGetChar();
+		/*if(!(char)result || (char)result == '\0' || result == 10)
+		{
+			printf("work it out : %i\n",i);
+			break;
+		}*/
 		s[i] = (char)result;
-		printf("salut : %i\n",i);
+		printf("salut : '%c'\n",(char)result);
 		i++;
+		
 	}
 }
 
@@ -97,7 +110,7 @@ void SynchConsole::copyStringToMachine(char *from, int to,unsigned size)
 {
 	unsigned i = 0;
 	int res;
-	while((i<size) && (from[i] != '\0'))
+	while((i<size) && (from[i] != '\0') && (from[i] != '\n' ))
 	{
 		res = (int)from[i];
 		machine->WriteMem(to+i,1,res);
