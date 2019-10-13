@@ -2,7 +2,7 @@
 int
 main()
 {
-	int n = 10;
+	int n = 100;
 	char s[n];
 	
 	GetString(s,n);
