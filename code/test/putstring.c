@@ -2,9 +2,11 @@
 int
 main()
 {
+    // String lower than MAXSTRING_SIZE
+	PutString("1\n");
+    // String that contain \0 and \n
+	PutString("a\nbl\0\n");
+    // String bigger than MAX_STRING_SIZE
 	PutString("abcdefghijkl\n");
-	//PutString("Voilà une deuxième phrase\n");
-	//PutString("Une dernière et je quitte le programme\n");
-	/* Halt(); */
 	return 0;
 }

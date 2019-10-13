@@ -92,39 +92,25 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_PutString:
 		{
-			// The test "result == MAX_STRING_SIZE" do not work at the first iteration if the string is small than MAX_STRING_SIZE
+			// The test "result == MAX_STRING_SIZE"
+            // do not work at the first iteration if the string is small than MAX_STRING_SIZE
 			int result = MAX_STRING_SIZE;
 			int from = machine->ReadRegister(4);
 			int i = 0;
 			char* to = new char[MAX_STRING_SIZE];
-			/*result = synchconsole->copyStringFromMachine(from,to,MAX_STRING_SIZE);
-			printf("valeur de result %i\n",result);
-			synchconsole->SynchPutString(to);
-			delete[] to;
-			to = new char[MAX_STRING_SIZE];
-			result = synchconsole->copyStringFromMachine(from+MAX_STRING_SIZE,to,MAX_STRING_SIZE);
-			printf("2ème valeur de result %i\n",result);
-			synchconsole->SynchPutString(to);*/
-			/*for(int i=0; result == MAX_STRING_SIZE; i+=MAX_STRING_SIZE)
-			{
-				//char* to = new char[MAX_STRING_SIZE];
-				result = synchconsole->copyStringFromMachine(from+i,to,MAX_STRING_SIZE);
-				//printf("valeur de result %i\n",i);
-				synchconsole->SynchPutString(to);
-			}*/
+
 			while(result == MAX_STRING_SIZE)
 			{
 				result = synchconsole->copyStringFromMachine(from+i,to,MAX_STRING_SIZE);
 				synchconsole->SynchPutString(to);
-				
+
 				i+=result;
 			}
 			DEBUG('s',"appel système de la fonction SynchPutString\n");
-			//synchconsole->SynchPutString(to);
 			delete[] to;
 			break;
 		}
-		
+
 		case SC_GetChar:
 		{
 		    DEBUG ('s', "GetChar, by user program.\n");
@@ -132,22 +118,21 @@ ExceptionHandler (ExceptionType which)
 			machine->WriteRegister(2,result);
 		    break;
 		}
-		
+
 		case SC_GetString:
 		{
 			int to = machine->ReadRegister(4);
-			//int n = machine->ReadRegister(5);
 			int i = 0;
 			int result = MAX_STRING_SIZE;
 			char* from = new char[MAX_STRING_SIZE];
-			
+
 			while(result == MAX_STRING_SIZE)
-			{			
+			{
 				synchconsole->SynchGetString(from,MAX_STRING_SIZE);
 				result = synchconsole->copyStringToMachine(from,to+i,MAX_STRING_SIZE);
 				i+=result;
 			}
-			/*ancienne version (ne gère pas si string>MAX_STRING_SIZE) : 
+			/*ancienne version (ne gère pas si string>MAX_STRING_SIZE) :
 			synchconsole->SynchGetString(from,MAX_STRING_SIZE);
 			synchconsole->copyStringToMachine(from,to,MAX_STRING_SIZE);*/
 			delete[] from;
