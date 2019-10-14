@@ -138,6 +138,13 @@ ExceptionHandler (ExceptionType which)
 			delete[] from;
 			break;
 		}
+		
+		case SC_PutInt:
+		{
+			int result = machine->ReadRegister(4);
+			synchconsole->SynchPutInt(result);
+			break;
+		}
 
 		case SC_Exit:
 		{

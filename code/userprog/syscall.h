@@ -37,6 +37,7 @@
 	#define SC_PutString	12
 	#define SC_GetChar	13
 	#define SC_GetString 14
+	#define SC_PutInt 15
 #endif //CHANGED
 
 
@@ -149,6 +150,8 @@ void PutString(char *s);
 int GetChar();
 
 void GetString(char *s,int n);
+
+void PutInt(int n);
 
 #endif // CHANGED
 

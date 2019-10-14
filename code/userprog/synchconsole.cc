@@ -83,4 +83,12 @@ int SynchConsole::copyStringToMachine(char *from, int to,unsigned size)
 	return i;
 }
 
+void SynchConsole::SynchPutInt(int n)
+{
+	char* result = new char[MAX_STRING_SIZE];
+	snprintf(result,MAX_STRING_SIZE,"%d",n);
+	SynchPutString(result);
+	delete[] result;
+}
+
 #endif // CHANGED

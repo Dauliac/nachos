@@ -178,6 +178,14 @@ GetString:
 	syscall
 	j	$31
 	.end GetString
+
+	.globl PutInt
+	.ent	PutInt
+PutInt:
+	addiu $2,$0,SC_PutInt
+	syscall
+	j	$31
+	.end PutInt
 #endif CHANGED
 
 /* dummy function to keep gcc happy */
