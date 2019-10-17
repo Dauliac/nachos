@@ -16,6 +16,8 @@ class SynchConsole:dontcopythis {
         int copyStringFromMachine(int from,char *to, unsigned size);
 		int copyStringToMachine(char *from,int to, unsigned size);
 		void SynchPutInt(int n);
+        int ThreadCreate(void f(void *arg), void *arg);
+        void ThreadExit(void);
     private:
         Console *console;
 };

@@ -146,6 +146,23 @@ ExceptionHandler (ExceptionType which)
 			break;
 		}
 
+		case SC_ThreadCreate:
+		{
+			/*int result = machine->ReadRegister(4);
+			synchconsole->SynchPutInt(result);
+			todo*/
+			do_ThreadCreate();
+			break;
+		}
+
+		case SC_ThreadExit:
+		{
+			/*int result = machine->ReadRegister(4);
+			synchconsole->SynchPutInt(result);
+			todo*/
+			break;
+		}
+
 		case SC_Exit:
 		{
 			int result = machine->ReadRegister (4);
