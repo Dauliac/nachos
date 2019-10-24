@@ -4,9 +4,8 @@
 #include "copyright.h"
 #include "utility.h"
 #include "console.h"
-class Userthread:dontcopythis {
-    public:
-        extern int do_ThreadCreate(int f,int arg);
-};
+
+extern int do_ThreadCreate(int f, int arg);
+
 #endif // USERTHREAD_H
 #endif // CHANGED
