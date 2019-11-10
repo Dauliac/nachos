@@ -173,6 +173,7 @@ GetChar:
 
 	.globl GetString
 	.ent	GetString
+
 GetString:
 	addiu $2,$0,SC_GetString
 	syscall
@@ -181,11 +182,28 @@ GetString:
 
 	.globl PutInt
 	.ent	PutInt
+
 PutInt:
 	addiu $2,$0,SC_PutInt
 	syscall
 	j	$31
 	.end PutInt
+
+	.globl ThreadCreate
+	.ent	ThreadCreate
+ThreadCreate:
+	addiu $2,$0,SC_ThreadCreate
+	syscall
+	j	$31
+	.end ThreadCreate
+
+	.globl ThreadExit
+	.ent	ThreadExit
+ThreadExit:
+	addiu $2,$0,SC_ThreadExit
+	syscall
+	j	$31
+	.end ThreadExit
 #endif CHANGED
 
 /* dummy function to keep gcc happy */

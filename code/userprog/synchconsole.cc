@@ -7,6 +7,15 @@
 static Semaphore *readAvail;
 static Semaphore *writeDone;
 
+static Semaphore *semaphoreGetChar;
+static Semaphore *semaphorePutChar;
+
+static Semaphore *semaphoreGetString;
+static Semaphore *semaphorePutString;
+
+static Semaphore *semaphorePutInt;
+
+
 static void ReadAvailHandler(void *arg) { (void) arg; readAvail->V(); }
 static void WriteDoneHandler(void *arg) { (void) arg; writeDone->V(); }
 
@@ -14,6 +23,15 @@ SynchConsole::SynchConsole(const char *in, const char *out)
 {
     readAvail = new Semaphore("read avail", 0);
     writeDone = new Semaphore("write done", 0);
+
+    semaphorePutChar = new Semaphore("puchar", 1);
+    semaphoreGetChar = new Semaphore("puchar", 1);
+
+    semaphorePutString = new Semaphore("putstring", 1);
+    semaphoreGetString = new Semaphore("getstring", 1);
+
+
+    semaphorePutInt = new Semaphore("putint", 1);
 
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
 }
@@ -25,13 +43,18 @@ SynchConsole::~SynchConsole()
 }
 void SynchConsole::SynchPutChar(int ch)
 {
+	semaphorePutChar->P();
     console->PutChar(ch);
     writeDone->P();
+	semaphorePutChar->V();
+
 }
 int SynchConsole::SynchGetChar()
 {
+	semaphoreGetChar->P();
     readAvail->P (); // wait for character to arrive
     int ch = (int)console->GetChar();
+	semaphoreGetChar->V();
     return ch;
 }
 void SynchConsole::SynchPutString(const char s[])
@@ -42,8 +65,8 @@ void SynchConsole::SynchPutString(const char s[])
 		SynchPutChar(s[i]);
 		i++;
 	}
-
 }
+
 void SynchConsole::SynchGetString(char *s, int n)
 {
 	int result;

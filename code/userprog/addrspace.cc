@@ -22,6 +22,11 @@
 #include "syscall.h"
 #include "new"
 
+#ifdef CHANGED
+#include "synch.h"
+#include "bitmap.h"
+#endif
+
 //----------------------------------------------------------------------
 // SwapHeader
 //      Do little endian to big endian conversion on the bytes in the
@@ -129,6 +134,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     pageTable[0].valid = FALSE;			// Catch NULL dereference
 
     AddrSpaceList.Append(this);
+
 }
 
 //----------------------------------------------------------------------
@@ -252,7 +258,7 @@ AddrSpacesRoom(unsigned blocksize)
 
 void
 DumpAddrSpaces(FILE *output,
-	       unsigned virtual_x, unsigned virtual_width,
+	      unsigned virtual_x, unsigned virtual_width,
 	       unsigned physical_x, unsigned y, unsigned blocksize)
 {
     ListElement *element;
@@ -294,3 +300,20 @@ AddrSpace::RestoreState ()
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 }
+
+#ifdef CHANGED
+//-----------------------------------------------------------------------
+//Initialize tread stack Pointer,
+//
+//-----------------------------------------------------------------------
+int
+AddrSpace::AllocateUserStack()
+{
+    int virtualMemSize = numPages * PageSize;
+    DEBUG('t', "Virtual memory size: %d\n", virtualMemSize);
+    int memPlace = virtualMemSize - 256+16;
+
+    return memPlace;
+}
+
+#endif

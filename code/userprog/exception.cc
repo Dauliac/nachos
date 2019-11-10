@@ -24,6 +24,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include "userthread.h"
 
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -94,6 +95,8 @@ ExceptionHandler (ExceptionType which)
 		{
 			// The test "result == MAX_STRING_SIZE"
             // do not work at the first iteration if the string is small than MAX_STRING_SIZE
+			DEBUG('s',"call fonction SynchPutString\n");
+            semWriter->P();
 			int result = MAX_STRING_SIZE;
 			int from = machine->ReadRegister(4);
 			int i = 0;
@@ -106,8 +109,8 @@ ExceptionHandler (ExceptionType which)
 
 				i+=result;
 			}
-			DEBUG('s',"appel système de la fonction SynchPutString\n");
 			delete[] to;
+            semWriter->V();
 			break;
 		}
 
@@ -121,6 +124,7 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_GetString:
 		{
+            semReader->P();
 			int to = machine->ReadRegister(4);
 			int i = 0;
 			int result = MAX_STRING_SIZE;
@@ -132,17 +136,33 @@ ExceptionHandler (ExceptionType which)
 				result = synchconsole->copyStringToMachine(from,to+i,MAX_STRING_SIZE);
 				i+=result;
 			}
-			/*ancienne version (ne gère pas si string>MAX_STRING_SIZE) :
-			synchconsole->SynchGetString(from,MAX_STRING_SIZE);
-			synchconsole->copyStringToMachine(from,to,MAX_STRING_SIZE);*/
 			delete[] from;
+            semReader->V();
 			break;
 		}
-		
+
 		case SC_PutInt:
 		{
+            semWriter->P();
 			int result = machine->ReadRegister(4);
 			synchconsole->SynchPutInt(result);
+            semWriter->V();
+			break;
+		}
+
+		case SC_ThreadCreate:
+		{
+            DEBUG('i', "Create thread\n");
+            int function = machine->ReadRegister(4);
+            int arg = machine->ReadRegister(5);
+            do_ThreadCreate(function, arg);
+			break;
+		}
+
+		case SC_ThreadExit:
+		{
+            DEBUG('i', "Exit thread\n");
+            do_ThreadExit();
 			break;
 		}
 

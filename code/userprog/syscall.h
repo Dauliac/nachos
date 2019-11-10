@@ -38,6 +38,8 @@
 	#define SC_GetChar	13
 	#define SC_GetString 14
 	#define SC_PutInt 15
+    #define SC_ThreadCreate 16
+    #define SC_ThreadExit 17
 #endif //CHANGED
 
 
@@ -152,6 +154,9 @@ int GetChar();
 void GetString(char *s,int n);
 
 void PutInt(int n);
+
+int ThreadCreate(void function(void*arg), void*arg);
+void ThreadExit(void);
 
 #endif // CHANGED
 
