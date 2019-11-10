@@ -1,4 +1,5 @@
 #ifdef CHANGED
+<<<<<<< HEAD
 #include "addrspace.h"
 #include "copyright.h"
 #include "userthread.h"
@@ -41,10 +42,40 @@ static void StartUserThread(void* schmurtz) {
 
     // Dump memory to see
     machine->DumpMem("threads.svg");
+=======
+#include "copyright.h"
+#include "system.h"
+#include "userthread.h"
+
+struct Schmurtz {
+    int function;
+    int arg;
+} Schmurtz;
+
+static void startUserThread(void *schmurtz) {
+    DEBUG ('x', "debug schmurtz \"%d\"\n", schmurtz);
+
+    machine->WriteRegister(4, schmurtz->arg);
+    machine->WriteRegister(PCReg, schmurtz->f);
+
+    int i;
+
+    for (i = 0; i < NumTotalRegs; i++)
+    machine->WriteRegister (i, 0);
+
+    machine->WriteRegister(4, schmurtz->arg);
+    machine->WriteRegister (PCReg, schmurtz->function);
+
+    machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
+
+    machine->WriteRegister (StackReg, currentThread->thread->numPages() * PageSize - 16);
+
+>>>>>>> 12b1def801894f80bdd31c0ff0c4168b691a20aa
     machine->Run();
 
 }
 
+<<<<<<< HEAD
 extern int do_ThreadCreate(int function, int arg)
 {
 
@@ -79,4 +110,21 @@ int do_ThreadExit(){
     }
     return 0;
 }
+=======
+extern int do_ThreadCreate(int f, int arg)
+{
+    struct Schmurtz* schmurtz = new struct Schmurtz;
+    schmurtz->function = f;
+    schmurtz->arg = arg;
+
+    Thread *newThread = new Thread("newThread");
+
+    newThread->Start(StartUserThread(), (void)* schmurtz);
+
+    return 0;
+}
+
+
+>>>>>>> 12b1def801894f80bdd31c0ff0c4168b691a20aa
+
 #endif // CHANGED

@@ -4,6 +4,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "console.h"
+<<<<<<< HEAD
 #include "synch.h"
 
 struct Schmurtz {
@@ -13,5 +14,10 @@ struct Schmurtz {
 
 extern int do_ThreadCreate(int function, int arg);
 extern int do_ThreadExit();
+=======
+
+extern int do_ThreadCreate(int f, int arg);
+>>>>>>> 12b1def801894f80bdd31c0ff0c4168b691a20aa
+
 #endif // USERTHREAD_H
 #endif // CHANGED

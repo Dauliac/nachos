@@ -10,6 +10,15 @@ static Semaphore *writeDone;
 static Semaphore *semaphoreGetChar;
 static Semaphore *semaphorePutChar;
 
+<<<<<<< HEAD
+static Semaphore *semaphoreGetString;
+static Semaphore *semaphorePutString;
+
+static Semaphore *semaphorePutInt;
+
+
+=======
+>>>>>>> 12b1def801894f80bdd31c0ff0c4168b691a20aa
 static void ReadAvailHandler(void *arg) { (void) arg; readAvail->V(); }
 static void WriteDoneHandler(void *arg) { (void) arg; writeDone->V(); }
 
@@ -18,8 +27,19 @@ SynchConsole::SynchConsole(const char *in, const char *out)
     readAvail = new Semaphore("read avail", 0);
     writeDone = new Semaphore("write done", 0);
 
-    semaphorePutChar = new Semaphore("putChar", 1);
-    semaphoreGetChar = new Semaphore("getChar", 1);
+<<<<<<< HEAD
+    semaphorePutChar = new Semaphore("puchar", 1);
+    semaphoreGetChar = new Semaphore("puchar", 1);
+
+    semaphorePutString = new Semaphore("putstring", 1);
+    semaphoreGetString = new Semaphore("getstring", 1);
+
+
+    semaphorePutInt = new Semaphore("putint", 1);
+=======
+	semaphorePutChar = new Semaphore("puchar", 1);
+	semaphoreGetChar = new Semaphore("puchar", 1);
+>>>>>>> 12b1def801894f80bdd31c0ff0c4168b691a20aa
 
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
 }

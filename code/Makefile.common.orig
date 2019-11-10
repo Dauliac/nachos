@@ -31,7 +31,11 @@ THREAD_O	:=	main.o list.o scheduler.o synch.o synchlist.o \
 			stats.o sysdep.o timer.o
 
 USERPROG_O	:=	addrspace.o bitmap.o exception.o progtest.o console.o synchconsole.o \
+<<<<<<< HEAD
+			machine.o mipssim.o translate.o userthread.o \
+=======
 			machine.o mipssim.o translate.o userthread.o
+>>>>>>> 12b1def801894f80bdd31c0ff0c4168b691a20aa
 
 VM_O		:=
 

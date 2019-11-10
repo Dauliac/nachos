@@ -85,9 +85,11 @@ ExceptionHandler (ExceptionType which)
 #ifdef CHANGED
         case SC_PutChar:
 		  {
-		    DEBUG ('s', "PutChar, by user program.\n");
+		    DEBUG ('s', "Put char, by user program.\n");
+            semWriter->P();
             char character = (char)machine->ReadRegister(4);
 		    synchconsole->SynchPutChar(character);
+            semWriter->V();
 		    break;
 		  }
 
@@ -95,7 +97,7 @@ ExceptionHandler (ExceptionType which)
 		{
 			// The test "result == MAX_STRING_SIZE"
             // do not work at the first iteration if the string is small than MAX_STRING_SIZE
-			DEBUG('s',"call fonction SynchPutString\n");
+		    DEBUG ('s', "Put string, by user program.\n");
             semWriter->P();
 			int result = MAX_STRING_SIZE;
 			int from = machine->ReadRegister(4);
@@ -116,14 +118,17 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_GetChar:
 		{
-		    DEBUG ('s', "GetChar, by user program.\n");
+		    DEBUG ('s', "Get char, by user program.\n");
+            semReader->P();
             int result = synchconsole->SynchGetChar();
 			machine->WriteRegister(2,result);
+            semReader->V();
 		    break;
 		}
 
 		case SC_GetString:
 		{
+		    DEBUG ('s', "Get string, by user program.\n");
             semReader->P();
 			int to = machine->ReadRegister(4);
 			int i = 0;
@@ -143,6 +148,7 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_PutInt:
 		{
+		    DEBUG ('s', "PutInt, by user program.\n");
             semWriter->P();
 			int result = machine->ReadRegister(4);
 			synchconsole->SynchPutInt(result);
@@ -152,7 +158,7 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_ThreadCreate:
 		{
-            DEBUG('i', "Create thread\n");
+            DEBUG('s', "Create thread, by user program.\n");
             int function = machine->ReadRegister(4);
             int arg = machine->ReadRegister(5);
             do_ThreadCreate(function, arg);
@@ -161,19 +167,9 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_ThreadExit:
 		{
-            DEBUG('i', "Exit thread\n");
+            DEBUG('s', "Exit thread, by user program.\n");
             do_ThreadExit();
 			break;
-		}
-
-		case SC_Exit:
-		{
-			int result = machine->ReadRegister (4);
-			if (result != 0)
-			{
-				printf("Error code %i\n", result);
-			}
-			interrupt->Halt ();
 		}
 
 #endif // CHANGED
