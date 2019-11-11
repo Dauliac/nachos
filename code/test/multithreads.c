@@ -1,26 +1,31 @@
 #ifdef CHANGED
 
 #include "syscall.h"
-#define THREAD_NUMBER 1
+// To increase threads number:
+// edit UserStacksAreaSize in addspace.h
+#define THREAD_NUMBER 300
+#define LOOP_NUMBER 3
 
-void what_thread(void *arg) {
+// Without bitmap: Print THREAD_NUMBER+LOOP_NUMBER char 'b'
+// With bitmap: print THREAD_NUMBER*LOOP_NUMBER char 'b'
+void threadator(void *arg) {
+    int i;
     int x = *((int *)arg);
-    /* PutString("\nThread N°"); */
-    PutChar(x);
+    for (i = 0; i < LOOP_NUMBER; i++) {
+        PutChar('b');
+    }
     ThreadExit();
 }
 
 int main() {
-    int i;
+    int n;
     void* args[THREAD_NUMBER];
-    char c = 'd';
-    char c2 = 'f';
-    PutChar(c);
-    /* for(i = 0; i < THREAD_NUMBER; i++) { */
-    /*     args[i] = &i; */
-    /* } */
-    ThreadCreate(what_thread, c2);
+    for(n = 0; n < THREAD_NUMBER; n++) {
+        args[n] = &n;
+        ThreadCreate(threadator, args[n]);
+    }
     ThreadExit();
+    return 0;
 }
 
 #endif

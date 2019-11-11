@@ -1,18 +1,21 @@
 #ifdef CHANGED
 #include "syscall.h"
 
-void f(void *arg) {
+void threadator(void *arg) {
     int x = *((int *)arg);
-    PutString("\nAnd the thread number is ...\n:");
     PutInt(x);
-    PutString("\n");
+    PutChar('\n');
     ThreadExit();
 }
+
 int main() {
-    int n1 = 2;
-    int n2 = 3;
-    ThreadCreate(f, &n1);
-    ThreadCreate(f, &n2);
+    int t1 = 2;
+    int t2 = 3;
+    int t3 = 4;
+    ThreadCreate(threadator, &t1);
+    ThreadCreate(threadator, &t2);
+    ThreadCreate(threadator, &t3);
+    // ThreadCreate(f, &t3);
     ThreadExit();
     return 0;
 }

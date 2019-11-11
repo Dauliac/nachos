@@ -17,32 +17,32 @@ static void StartUserThread(void* schmurtz) {
     DEBUG('t', "threadSchmurtz is\"%d\"\n", threadSchmurtz);
 
     int i;
-
     for (i = 0; i < NumTotalRegs; i++) {
-        machine->WriteRegister (i, 0);
+        machine->WriteRegister(i, 0);
     }
+
       // initial program counter : fonction f
-    machine->WriteRegister (PCReg, threadSchmurtz->function);
+    machine->WriteRegister(PCReg, threadSchmurtz->function);
     DEBUG('t', "PCReg = %d\n", machine->ReadRegister(PCReg));
 
     // Write argument in register 4
-    machine->WriteRegister (4, threadSchmurtz->arg);
+    machine->WriteRegister(4, threadSchmurtz->arg);
 
     // Add 4 padding by security
-    machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
+    machine->WriteRegister(NextPCReg, machine->ReadRegister(PCReg) + 4);
     DEBUG('t', "NextPCReg = %d\n", machine->ReadRegister(NextPCReg));
 
     // Magic function to get free memory space
-    int memStack = currentThread->space->AllocateUserStack();
-    DEBUG('t', "Allocate memory at: %d\n", memStack);
+    int memAddr = currentThread->space->AllocateUserStack();
+    DEBUG('t', "Allocate memory at: %d\n", memAddr);
 
     // Write new memory stack
-    machine->WriteRegister (StackReg, memStack);
+    machine->WriteRegister(StackReg, memAddr);
 
-    // Dump memory to see
+    DEBUG('t', "machine run after all threads things\n");
+    // Dump memory to see threads
     machine->DumpMem("threads.svg");
     machine->Run();
-
 }
 
 extern int do_ThreadCreate(int function, int arg)
@@ -58,11 +58,12 @@ extern int do_ThreadCreate(int function, int arg)
 
     Thread *newThread = new Thread("Thread");
 
-    if (newThread == NULL) {
+    if (!newThread) {
         return -1;
     }
 
     newThread->Start(StartUserThread, (void*)schmurtz);
+
     return 0;
 }
 
@@ -73,6 +74,9 @@ int do_ThreadExit(){
     DEBUG('t', "Surviving threads number:  %d\n", threadCounter);
 
     if (threadCounter > 0) {
+        int addr = machine->ReadRegister(StackReg);
+        DEBUG('t', "The next addr will be unallocated:  %d\n", addr);
+        currentThread->space->UnAllocateUserStack(addr);
         currentThread->Finish();
     } else {
         interrupt->Halt();

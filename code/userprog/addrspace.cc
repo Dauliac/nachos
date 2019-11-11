@@ -135,6 +135,16 @@ AddrSpace::AddrSpace (OpenFile * executable)
 
     AddrSpaceList.Append(this);
 
+    #ifdef CHANGED
+    semAlloc = new Semaphore("Bitmap semaphore ", 1);
+
+    int space_counter = UserStacksAreaSize / (256 + 16);
+
+    bitmap = new BitMap(space_counter);
+    bitmap->Mark(0);
+
+    DEBUG ('a', "There is %d free slots spaces in thread bitmap.\n", space_counter);
+    #endif
 }
 
 //----------------------------------------------------------------------
@@ -148,7 +158,9 @@ AddrSpace::~AddrSpace ()
   // delete pageTable;
   delete [] pageTable;
   // End of modification
-
+#ifdef MODIFIED
+  delete bitmap;
+#endif
   AddrSpaceList.Remove(this);
 }
 
@@ -181,8 +193,7 @@ AddrSpace::InitRegisters ()
     // allocated the stack; but subtract off a bit, to make sure we don't
     // accidentally reference off the end!
     machine->WriteRegister (StackReg, numPages * PageSize - 16);
-    DEBUG ('a', "Initializing stack register to 0x%x\n",
-	   numPages * PageSize - 16);
+    DEBUG ('a', "Initializing stack register to 0x%x\n",numPages * PageSize - 16);
 }
 
 //----------------------------------------------------------------------
@@ -304,16 +315,52 @@ AddrSpace::RestoreState ()
 #ifdef CHANGED
 //-----------------------------------------------------------------------
 //Initialize tread stack Pointer,
+// with 16 bits of space between each spaces
 //
 //-----------------------------------------------------------------------
 int
 AddrSpace::AllocateUserStack()
 {
+    // Old implementation:
+    // threadCounter is an old argment
+
+    // int virtualMemSize = numPages * PageSize;
+    // DEBUG('t', "Virtual memory size: %d\n", virtualMemSize);
+    // int addr = virtualMemSize - (256+16) * threadCounter  -16 ;
+
+    semAlloc->P ();
+    int foundedAddr = bitmap->Find();
+    semAlloc->V ();
+
+    if (foundedAddr < 1 ) {
+        DEBUG('t', "No Bitmap to distribute: %d\n");
+        //TODO: crash nachos
+    }
+    DEBUG('t', "Bitmap found: %d\n", foundedAddr);
+
     int virtualMemSize = numPages * PageSize;
     DEBUG('t', "Virtual memory size: %d\n", virtualMemSize);
-    int memPlace = virtualMemSize - 256+16;
+    // size_of: (256+16) * foundedAddr is the size of thread stack
+    // 256 - size_of -16 is the address of the thread
+    // -16 is to have a empty space between.
+    int addr = virtualMemSize - (256+16) * foundedAddr - 16;
 
-    return memPlace;
+    DEBUG('t', "New thread address is: %d\n", addr);
+
+    return addr;
+}
+
+void
+AddrSpace::UnAllocateUserStack(int addr)
+{
+    int virtualMemSize = numPages * PageSize;
+    int slot = (virtualMemSize - addr) / (256 + 16);
+
+    DEBUG('t', "Remove bitmap slot: %d\n", slot);
+
+    semAlloc->P ();
+    bitmap->Clear(slot);
+    semAlloc->V ();
 }
 
 #endif

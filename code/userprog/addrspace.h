@@ -19,7 +19,13 @@
 #include "noff.h"
 #include "list.h"
 
-#define UserStacksAreaSize		1024	// increase this as necessary!
+#ifdef CHANGED
+//#include "synch.h"
+#include "bitmap.h"
+class Semaphore;
+#endif
+
+#define UserStacksAreaSize		2048	// increase this as necessary!
 
 class AddrSpace:dontcopythis
 {
@@ -28,9 +34,6 @@ class AddrSpace:dontcopythis
     // initializing it with the program
     // stored in the file "executable"
     ~AddrSpace ();		// De-allocate an address space
-    #ifdef CHANGED
-        int AllocateUserStack(int cptThread);
-    #endif
     void InitRegisters ();	// Initialize user-level CPU registers,
     // before jumping to user code
 
@@ -45,6 +48,7 @@ class AddrSpace:dontcopythis
 
     #ifdef CHANGED
     int AllocateUserStack();
+    void UnAllocateUserStack (int addr);
     #endif // CHANGED
 
   private:
@@ -52,6 +56,11 @@ class AddrSpace:dontcopythis
 
     TranslationEntry * pageTable; // Page table
     unsigned int numPages;	// Number of pages in the page table
+
+    #ifdef CHANGED
+    Semaphore *semAlloc;
+    BitMap *bitmap;
+    #endif
 
 };
 
