@@ -159,14 +159,14 @@ List::Remove (void *item)
 
     for (cur = &first; *cur; cur = &(*cur)->next)
       {
-	if ((*cur)->item == item)
-	  {
-	    *cur = (*cur)->next;
-	    return;
-	  }
+	  if ((*cur)->item == item)
+	    {
+		*cur = (*cur)->next;
+		return;
+	    }
       }
 
-    ASSERT(FALSE);
+    ASSERT (FALSE);
 }
 
 //----------------------------------------------------------------------
@@ -181,7 +181,7 @@ List::Length (void)
     int n = 0;
 
     for (cur = first; cur; cur = cur->next)
-      n++;
+	n++;
 
     return n;
 }
@@ -227,8 +227,7 @@ List::Mapcar (VoidFunctionPtr2 func, void *arg)
 //      Returns TRUE if the list is empty (has no items).
 //----------------------------------------------------------------------
 
-bool
-List::IsEmpty ()
+bool List::IsEmpty ()
 {
     if (first == NULL)
 	return TRUE;

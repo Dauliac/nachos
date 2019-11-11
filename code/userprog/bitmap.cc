@@ -37,10 +37,10 @@ BitMap::BitMap (int nitems)
 
 BitMap::~BitMap ()
 {
-  // LB: Missing [] in delete directive
-  //  delete map;
-  delete [] map;
-  // End of modification
+    // LB: Missing [] in delete directive
+    //  delete map;
+    delete[]map;
+    // End of modification
 }
 
 //----------------------------------------------------------------------
@@ -78,8 +78,7 @@ BitMap::Clear (int which)
 //      "which" is the number of the bit to be tested.
 //----------------------------------------------------------------------
 
-bool
-BitMap::Test (int which)
+bool BitMap::Test (int which)
 {
     ASSERT (which >= 0 && which < numBits);
 

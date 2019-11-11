@@ -8,6 +8,8 @@ gitignore.io help:
 *.un~
 :w
 *.svg
+*.tgz
+*.tar.gz
 
 ### C ###
 # Prerequisites

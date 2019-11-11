@@ -1,0 +1,31 @@
+# Author: github.com/dauliac
+# Date:   11/11/19
+# Version: 0.0.1
+# Description:
+
+set -e # Crash on error
+set -u # Crash on undefined variable
+
+LOGIN_1="jdauliac"
+LOGIN_2="tveloso"
+GROUP="G2"
+TP_NUMBER=$1
+
+SECRET=pP6gzA
+
+DIR=$(realpath $(dirname ${BASH_SOURCE[0]})) # Folder where this script is
+
+ARCHIVE=$(DIR)/$(LOGIN_1)-$(LOGIN2).tar.gz
+DEST=/net/stockage/aguermou/NACHOS/TP$(NUMBER)/$(GROUP)
+
+give_up() {
+    cp $(DIR)/rapports/$1 $(DIR)rapport.pdf
+    make -C $(DIR)code indent clean all
+
+    tar cvfz $(ARCHIVE) $(DIR)/rapport.pdf $(DIR)/code/
+    rm -f $(DIR)/rapport.pdf
+
+    chmod a+r $(ARCHIVE)
+    chmod og-w $(ARCHIVE)
+    mv $(ARCHIVE) $(DEST)
+}
