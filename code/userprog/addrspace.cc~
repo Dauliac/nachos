@@ -138,7 +138,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
 #ifdef CHANGED
     semAlloc = new Semaphore ("Bitmap semaphore ", 1);
 
-    int space_counter = UserStacksAreaSize / (256 + 16);
+    int space_counter = (UserStacksAreaSize / (256 + 16));
 
     bitmap = new BitMap (space_counter);
     bitmap->Mark (0);

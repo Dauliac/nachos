@@ -49,7 +49,6 @@ SynchConsole::SynchPutChar (int ch)
     console->PutChar (ch);
     writeDone->P ();
     semaphorePutChar->V ();
-
 }
 
 int

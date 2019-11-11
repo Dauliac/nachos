@@ -15,9 +15,9 @@ SECRET=pP6gzA
 
 DIR=$(realpath $(dirname ${BASH_SOURCE[0]})) # Folder where this script is
 
-RAPORT=${DIR}/rapports/rapport_tp${TP_NUMBER}.pdf
-TMP_RAPPORT=${DIR}rapport.pdf
-ARCHIVE=${DIR}/${LOGIN_1}-${LOGIN_2}.tar.gz
+RAPORT=rapports/rapport_tp${TP_NUMBER}.pdf
+TMP_RAPPORT=rapport.pdf
+ARCHIVE=${LOGIN_1}-${LOGIN_2}-${SECRET}.tar.gz
 DEST=/net/stockage/aguermou/NACHOS/TP${TP_NUMBER}/${GROUP}
 
 
@@ -26,17 +26,17 @@ DEST=/net/stockage/aguermou/NACHOS/TP${TP_NUMBER}/${GROUP}
 #################
 
 give_up() {
-    cp ${RAPORT} ${TMP_RAPPORT}
+    cp ${DIR}/${RAPORT} ${DIR}/${TMP_RAPPORT}
     make -C ${DIR}/code indent clean all
+    tar cvfz ${ARCHIVE}  -C ${DIR} ${TMP_RAPPORT} code/
+    rm -f ${DIR}/${TMP_RAPPORT}
 
-    tar cvfz ${ARCHIVE} ${TMP_RAPPORT} ${DIR}/code/
-    rm -f ${TMP_RAPPORT}
-
-    chmod a+r ${ARCHIVE}
-    chmod og-w ${ARCHIVE}
+    chmod a+r ${DIR}/${ARCHIVE}
+    chmod og-w ${DIR}/${ARCHIVE}
     are_you_sure
-    mv ${ARCHIVE} ${DEST}
+    mv ${DIR}/${ARCHIVE} ${DEST}
     printf "Everything is good !\n bye"
+    ls ${DEST}/${ARCHIVE}
     exit 0
 }
 

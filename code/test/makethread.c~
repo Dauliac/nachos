@@ -6,7 +6,7 @@ threadator (void *arg)
 {
     int x = *((int *) arg);
     PutInt (x);
-    PutChar ('\n');
+    //PutChar ('\n');
     ThreadExit ();
 }
 
