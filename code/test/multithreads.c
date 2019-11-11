@@ -3,7 +3,7 @@
 #include "syscall.h"
 // To increase threads number:
 // edit UserStacksAreaSize in addspace.h
-#define THREAD_NUMBER 300
+#define THREAD_NUMBER 1
 #define LOOP_NUMBER 3
 
 // Without bitmap: Print THREAD_NUMBER+LOOP_NUMBER char 'b'

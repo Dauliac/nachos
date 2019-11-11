@@ -166,13 +166,13 @@ ExceptionHandler (ExceptionType which)
 		case SC_ThreadCreate:
 		    {
 			DEBUG ('s', "Create thread, by user program.\n");
-			semWriter->P ();
+			semReader->P ();
 			int function = machine->ReadRegister (4);
 			int arg = machine->ReadRegister (5);
 			int result = do_ThreadCreate (function, arg);
 			DEBUG ('s', "Create thread return: %d.\n", result);
 			machine->WriteRegister (2, result);
-			semWriter->P ();
+			semReader->P ();
 			break;
 		    }
 

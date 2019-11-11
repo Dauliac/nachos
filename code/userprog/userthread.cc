@@ -62,11 +62,6 @@ do_ThreadCreate (int function, int arg)
 
     Thread *newThread = new Thread ("Thread");
 
-    if (!newThread)
-      {
-	  return -1;
-      }
-
     newThread->Start (StartUserThread, (void *) schmurtz);
 
     return 0;
