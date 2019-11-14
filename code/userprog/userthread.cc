@@ -79,7 +79,7 @@ do_ThreadExit ()
       {
 	  int addr = machine->ReadRegister (StackReg);
 	  DEBUG ('t', "The next addr will be unallocated:  %d\n", addr);
-	  currentThread->space->UnAllocateUserStack (addr);
+	  currentThread->space->UnAllocateUserStack(addr);
 	  currentThread->Finish ();
       }
     else

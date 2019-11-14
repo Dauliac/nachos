@@ -172,7 +172,7 @@ ExceptionHandler (ExceptionType which)
 			int result = do_ThreadCreate (function, arg);
 			DEBUG ('s', "Create thread return: %d.\n", result);
 			machine->WriteRegister (2, result);
-			semReader->P ();
+			semReader->V ();
 			break;
 		    }
 
