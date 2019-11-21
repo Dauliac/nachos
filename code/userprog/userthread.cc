@@ -6,8 +6,8 @@
 #include "synch.h"
 #include "syscall.h"
 
-static int threadCounter = 1;
-static Semaphore *semThread = new Semaphore ("semaphore_thread_counter", 1);
+//static int threadCounter = 1;
+//static Semaphore *semThread = new Semaphore ("semaphore_thread_counter", 1);
 
 static void
 StartUserThread (void *schmurtz)
@@ -56,9 +56,9 @@ do_ThreadCreate (int function, int arg)
     schmurtz->function = function;
     schmurtz->arg = arg;
 
-    semThread->P ();
-    threadCounter++;
-    semThread->V ();
+    currentThread->space->semThread->P ();
+    currentThread->space->threadCounter++;
+    currentThread->space->semThread->V ();
 
     Thread *newThread = new Thread ("Thread");
 
@@ -70,12 +70,12 @@ do_ThreadCreate (int function, int arg)
 int
 do_ThreadExit ()
 {
-    semThread->P ();
-    threadCounter--;
-    semThread->V ();
-    DEBUG ('t', "Surviving threads number:  %d\n", threadCounter);
+    currentThread->space->semThread->P ();
+    currentThread->space->threadCounter--;
+    currentThread->space->semThread->V ();
+    DEBUG ('t', "Surviving threads number:  %d\n", currentThread->space->threadCounter);
 
-    if (threadCounter > 0)
+    if (currentThread->space->threadCounter > 0)
       {
 	  int addr = machine->ReadRegister (StackReg);
 	  DEBUG ('t', "The next addr will be unallocated:  %d\n", addr);

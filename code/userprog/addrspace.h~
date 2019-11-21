@@ -52,6 +52,9 @@ class AddrSpace:dontcopythis
 #ifdef CHANGED
     int AllocateUserStack ();
     void UnAllocateUserStack (int addr);
+    // Semaphore to lock thread incrementation
+    Semaphore *semThread;
+    int threadCounter;
 #endif // CHANGED
 
   private:

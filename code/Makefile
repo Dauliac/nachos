@@ -63,3 +63,6 @@ indent:
 
 test_td2:
 	k
+
+tags:
+	ctags -R .

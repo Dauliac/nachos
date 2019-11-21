@@ -25,7 +25,9 @@
 #ifdef CHANGED
 #include "synch.h"
 #include "bitmap.h"
-#endif
+
+#endif // CHANGED
+
 
 //----------------------------------------------------------------------
 // SwapHeader
@@ -49,6 +51,7 @@ SwapHeader (NoffHeader * noffH)
 	WordToHost (noffH->uninitData.virtualAddr);
     noffH->uninitData.inFileAddr = WordToHost (noffH->uninitData.inFileAddr);
 }
+
 
 //----------------------------------------------------------------------
 // AddrSpaceList
@@ -98,10 +101,18 @@ AddrSpace::AddrSpace (OpenFile * executable)
     DEBUG ('a', "Initializing address space, num pages %d, total size 0x%x\n",
 	   numPages, size);
 // first, set up the translation
-    pageTable = new TranslationEntry[numPages];
-    for (i = 0; i < numPages; i++)
-      {
-	  pageTable[i].physicalPage = i;	// for now, phys page # = virtual page #
+    pageTable = new TranslationEntry[numPages];#endif //CHANGED
+
+    for (i = 0; i < numPages; i++)#endif //CHANGED
+
+      {#endif //CHANGED
+
+#ifdef CHANGED#endif //CHANGED
+
+      // TODO verify is it is good or not#endif //CHANGED
+
+	  pageTable[i].physicalPage = i+1;	// for now, phys page # = virtual page #
+#endif //CHANGED
 	  pageTable[i].valid = TRUE;
 	  pageTable[i].use = FALSE;
 	  pageTable[i].dirty = FALSE;
@@ -115,18 +126,35 @@ AddrSpace::AddrSpace (OpenFile * executable)
       {
 	  DEBUG ('a', "Initializing code segment, at 0x%x, size 0x%x\n",
 		 noffH.code.virtualAddr, noffH.code.size);
-	  executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),
-			      noffH.code.size, noffH.code.inFileAddr);
+      /*executable->ReadAt (&(machine->mainMemory[noffH.code.virtualAddr]),
+                  noffH.code.size, noffH.code.inFileAddr);*/
+#ifdef CHANGED
+      ReadAtVirtual(executable,
+         noffH.code.virtualAddr,
+         noffH.code.size,
+         noffH.code.inFileAddr,
+         pageTable,
+         numPages);
+#endif //CHANGED
       }
     if (noffH.initData.size > 0)
       {
 	  DEBUG ('a', "Initializing data segment, at 0x%x, size 0x%x\n",
 		 noffH.initData.virtualAddr, noffH.initData.size);
-	  executable->ReadAt (&
-			      (machine->mainMemory
-			       [noffH.initData.virtualAddr]),
-			      noffH.initData.size, noffH.initData.inFileAddr);
-      }
+      /*executable->ReadAt (&
+                  (machine->mainMemory
+                   [noffH.initData.virtualAddr]),
+                  noffH.initData.size, noffH.initData.inFileAddr);
+      }*/
+#ifdef CHANGED
+    ReadAtVirtual(executable,
+                  noffH.initData.virtualAddr,
+                   noffH.initData.size,
+                   noffH.initData.inFileAddr,
+                   pageTable,
+                   numPages);
+#endif
+    }
 
     DEBUG ('a', "Area for stacks at 0x%x, size 0x%x\n",
 	   size - UserStacksAreaSize, UserStacksAreaSize);
@@ -138,10 +166,13 @@ AddrSpace::AddrSpace (OpenFile * executable)
 #ifdef CHANGED
     semAlloc = new Semaphore ("Bitmap semaphore ", 1);
 
-    int space_counter = (UserStacksAreaSize / (256 + 16));
+    int space_counter = (UserStacksAreaSize / (256 + 16))-1;
 
     bitmap = new BitMap (space_counter);
     bitmap->Mark (0);
+
+    threadCounter = 1;
+    semThread = new Semaphore ("semaphore_thread_counter", 1);
 
     DEBUG ('a', "There is %d free slots spaces in thread bitmap.\n",
 	   space_counter);
@@ -157,13 +188,14 @@ AddrSpace::~AddrSpace ()
 {
     // LB: Missing [] for delete
     // delete pageTable;
-    delete[]pageTable;
+    delete [] pageTable;
     // End of modification
-#ifdef MODIFIED
+#ifdef CHANGED
     delete bitmap;
+    delete semThread;
 #endif
     AddrSpaceList.Remove (this);
-}
+} 
 
 //----------------------------------------------------------------------
 // AddrSpace::InitRegisters
@@ -226,22 +258,22 @@ DrawArea (FILE * output, unsigned x, unsigned virtual_x,
 	     x, y - page * blocksize, blocksize, name);
 }
 
-unsigned
+    unsigned
 AddrSpace::Dump (FILE * output, unsigned virtual_x, unsigned virtual_width,
-		 unsigned physical_x, unsigned virtual_y, unsigned y,
-		 unsigned blocksize)
+    unsigned physical_x, unsigned virtual_y, unsigned y,
+    unsigned blocksize)
 {
     unsigned ret = machine->DumpPageTable (output, pageTable, numPages,
-					   virtual_x, virtual_width,
-					   physical_x, virtual_y, y,
-					   blocksize);
+                                           virtual_x, virtual_width,
+                                           physical_x, virtual_y, y,
+                                           blocksize);
 
     DrawArea (output, 0, virtual_x, virtual_y, blocksize, &noffH.code,
-	      "code");
+                  "code");
     DrawArea (output, 0, virtual_x, virtual_y, blocksize, &noffH.initData,
-	      "data");
+                  "data");
     DrawArea (output, 0, virtual_x, virtual_y, blocksize, &noffH.uninitData,
-	      "bss");
+                  "bss");
 
     DumpThreadsState (output, this, virtual_x, virtual_y, blocksize);
 
@@ -369,8 +401,42 @@ AddrSpace::UnAllocateUserStack (int addr)
     DEBUG ('t', "Remove bitmap slot: %d\n", slot);
 
     semAlloc->P ();
+
     bitmap->Clear (slot);
     semAlloc->V ();
+}
+
+void
+AddrSpace::ReadAtVirtual(OpenFile *executable,
+                         int virtualAddress,
+                         int numBytes,
+                         int position,
+                         TranslationEntry *pageTable,
+                         unsigned numPages)
+{
+    char buff[numBytes];
+
+    executable->ReadAt((void*)buff, numBytes, position);
+
+    DEBUG ('a', "Readed %i from with size of %i\n", numBytes, position);
+
+    // Backup old page and page size;
+    unsigned physicalPageSize = machine->pageTableSize;
+    TranslationEntry *physicalPageTable = machine->pageTable;
+
+    // Set new virtual page and size;
+    machine->pageTable = pageTable;
+    machine->pageTableSize = numPages;
+
+    // Write memory byte per byte
+    int i;
+    for(i = 0; i < numBytes; i++){
+        machine->WriteMem(virtualAddress+i, 1, buff[i]);
+    }
+
+    // Restore physical page and size
+    machine->pageTable = physicalPageTable;
+    machine->pageTableSize = physicalPageSize;
 }
 
 #endif

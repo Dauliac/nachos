@@ -183,6 +183,17 @@ ExceptionHandler (ExceptionType which)
 			break;
 		    }
 
+        case SC_Exit:
+		    {
+			DEBUG ('s', "Exit, by user program.\n");
+			int code = machine->ReadRegister (4);
+            if (code != 1) {
+                printf("Error code %i", code);
+            }
+	        interrupt->Halt ();
+			break;
+		    }
+
 #endif // CHANGED
 		default:
 		    {

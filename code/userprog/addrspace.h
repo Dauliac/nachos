@@ -20,7 +20,6 @@
 #include "list.h"
 
 #ifdef CHANGED
-//#include "synch.h"
 #include "bitmap.h"
 class Semaphore;
 #endif
@@ -48,8 +47,11 @@ class AddrSpace:dontcopythis
     {
 	return numPages;
     }
-
 #ifdef CHANGED
+    // Semaphore to lock thread incrementation
+    Semaphore *semThread;
+    int threadCounter;
+
     int AllocateUserStack ();
     void UnAllocateUserStack (int addr);
 #endif // CHANGED
@@ -63,6 +65,8 @@ class AddrSpace:dontcopythis
 #ifdef CHANGED
     Semaphore *semAlloc;
     BitMap *bitmap;
+
+    static void ReadAtVirtual (OpenFile *executable,int virtualAddr,int numBytes, int position, TranslationEntry *pageTable,unsigned numPages);
 #endif
 
 };
