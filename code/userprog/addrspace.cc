@@ -101,13 +101,13 @@ AddrSpace::AddrSpace (OpenFile * executable)
     DEBUG ('a', "Initializing address space, num pages %d, total size 0x%x\n",
 	   numPages, size);
 // first, set up the translation
-    pageTable = new TranslationEntry[numPages];#endif //CHANGED
+    pageTable = new TranslationEntry[numPages];
 
-    for (i = 0; i < numPages; i++)#endif //CHANGED
+    for (i = 0; i < numPages; i++) //CHANGED
 
-      {#endif //CHANGED
+      { //CHANGED
 
-#ifdef CHANGED#endif //CHANGED
+#ifdef CHANGED //CHANGED
 
       // TODO verify is it is good or not#endif //CHANGED
 
@@ -382,9 +382,9 @@ AddrSpace::AllocateUserStack ()
 
     int virtualMemSize = numPages * PageSize;
     DEBUG ('t', "Virtual memory size: %d\n", virtualMemSize);
-    // size_of: (256+16) * foundedAddr is the size of thread stack
-    // 256 - size_of -16 is the address of the thread
-    // -16 is to have a empty space between.
+    // size_of: (256+16) * foun#endif //CHANGEDdAddr is the size of thread stack
+    // 256 - size_of -16 is the#endif //CHANGEDddress of the thread
+    // -16 is to have a empty s#endif //CHANGEDce between.
     int addr = virtualMemSize - (256 + 16) * foundedAddr - 16;
 
     DEBUG ('t', "New thread address is: %d\n", addr);

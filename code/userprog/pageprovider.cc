@@ -1,12 +1,12 @@
 #ifdef CHANGED
-#
-#include bitmap.h
+#include "pageprovider.h"
+#include "bitmap.h"
 
 PageProvider::PageProvider()
 {
 
     pageMap = new Bitmap(numPages);
-    pageMap->Mak(0);
+    pageMap->Mark(0);
 }
 
 PageProvider::~PageProvider()
@@ -14,10 +14,17 @@ PageProvider::~PageProvider()
 
 }
 
-PageProvider::GetEmptyPage()
+int PageProvider::GetEmptyPage()
 {
-    int gettedPage = pageMap->Find();
+    int page = pageMap->Find();
+    ASSERT(page != -1);
+    memset(machine->mainMemory + page * PageSize, 0, PageSize);
+    return page;
+}
 
+void PageProvider::ReleasePage(int numPage)
+{
+    pageMap->Clear(numPage);
 }
 
 #endif // CHANGED
