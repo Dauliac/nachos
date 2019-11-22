@@ -6,14 +6,11 @@ class PageProvider:dontcopythis
      ~PageProvider ();
 
     int GetEmptyPage();
+    void ReleasePage(int numPage);
+    int NumAvailPage();
 
-  /*private:
-    int numBits;		// number of bits in the bitmap
-    int numWords;		// number of words of bitmap storage
-    // (rounded up if numBits is not a
-    //  multiple of the number of bits in
-    //  a word)
-    unsigned int *map;		// bit storage*/
+  private:
+    int pagesNumber;
 };
 
 #endif // CHANGED

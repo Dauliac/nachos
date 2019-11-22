@@ -2,16 +2,15 @@
 #include "pageprovider.h"
 #include "bitmap.h"
 
-PageProvider::PageProvider()
+PageProvider::PageProvider(int pagesNumber)
 {
-
-    pageMap = new Bitmap(numPages);
+    pageMap = new Bitmap(pagesNumber);
     pageMap->Mark(0);
 }
 
 PageProvider::~PageProvider()
 {
-
+    delete pageMap;
 }
 
 int PageProvider::GetEmptyPage()
@@ -25,6 +24,11 @@ int PageProvider::GetEmptyPage()
 void PageProvider::ReleasePage(int numPage)
 {
     pageMap->Clear(numPage);
+}
+
+int PageProvider::NumAvailPage()
+{
+    return pageMap->NumClear();
 }
 
 #endif // CHANGED
