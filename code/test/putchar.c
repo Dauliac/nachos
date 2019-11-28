@@ -17,5 +17,5 @@ main ()
 {
     print ('a', 1);
     return 1;
-    //Halt();
+    while(1);
 }

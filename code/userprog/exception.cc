@@ -183,6 +183,14 @@ ExceptionHandler (ExceptionType which)
 			break;
 		    }
 
+			case SC_ForkExec:
+		    {
+			DEBUG ('s', "ForkExec, by user program.\n");
+			char filename = (char)machine->ReadRegister (4);
+			ForkExec(&filename);
+			break;
+		    }
+
         case SC_Exit:
 		    {
 			DEBUG ('s', "Exit, by user program.\n");

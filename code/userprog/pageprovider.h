@@ -1,8 +1,13 @@
 #ifdef CHANGED
+#ifndef PAGEPROVIDER_H
+#define PAGEPROVIDER_H
+#include "copyright.h"
+#include "utility.h"
+#include "bitmap.h"
 class PageProvider:dontcopythis
 {
   public:
-    PageProvider (int numPages);	
+    PageProvider(unsigned int pagesNumber);	
      ~PageProvider ();
 
     int GetEmptyPage();
@@ -10,7 +15,8 @@ class PageProvider:dontcopythis
     int NumAvailPage();
 
   private:
-    int pagesNumber;
+    BitMap *pageMap;
 };
 
+#endif // PAGEPROVIDER_H
 #endif // CHANGED

@@ -19,9 +19,12 @@
 #include "noff.h"
 #include "list.h"
 
+
 #ifdef CHANGED
 #include "bitmap.h"
 class Semaphore;
+
+#include "pageprovider.h"
 #endif
 
 #define UserStacksAreaSize		2048	// increase this as necessary!
@@ -65,6 +68,7 @@ class AddrSpace:dontcopythis
 #ifdef CHANGED
     Semaphore *semAlloc;
     BitMap *bitmap;
+    PageProvider *pageProvider;
 
     static void ReadAtVirtual (OpenFile *executable,int virtualAddr,int numBytes, int position, TranslationEntry *pageTable,unsigned numPages);
 #endif

@@ -88,4 +88,18 @@ do_ThreadExit ()
       }
     return 0;
 }
+
+int ForkExec(const char*s)
+{
+			OpenFile *executable = fileSystem->Open(s);
+			AddrSpace *space;
+			space = new AddrSpace (executable);
+      currentThread->space = space;
+
+      delete executable;
+      machine->DumpMem ("memory.svg");
+      machine->Run ();
+}
+
+
 #endif // CHANGED

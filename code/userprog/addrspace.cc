@@ -24,8 +24,6 @@
 
 #ifdef CHANGED
 #include "synch.h"
-#include "bitmap.h"
-
 #endif // CHANGED
 
 
@@ -77,7 +75,6 @@ List AddrSpaceList;
 AddrSpace::AddrSpace (OpenFile * executable)
 {
     unsigned int i, size;
-
     executable->ReadAt (&noffH, sizeof (noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) &&
 	(WordToHost (noffH.noffMagic) == NOFFMAGIC))
@@ -89,6 +86,9 @@ AddrSpace::AddrSpace (OpenFile * executable)
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStacksAreaSize;	// we need to increase the size
     // to leave room for the stack
     numPages = divRoundUp (size, PageSize);
+    #ifdef CHANGED
+    pageProvider = new PageProvider(NumPhysPages);
+    #endif // CHANGED
     size = numPages * PageSize;
 
     // check we're not trying
@@ -103,15 +103,13 @@ AddrSpace::AddrSpace (OpenFile * executable)
 // first, set up the translation
     pageTable = new TranslationEntry[numPages];
 
-    for (i = 0; i < numPages; i++) //CHANGED
+    for (i = 0; i < numPages; i++)
+      {
+#ifdef CHANGED
+      // TODO verify is it is good or not#endif
 
-      { //CHANGED
-
-#ifdef CHANGED //CHANGED
-
-      // TODO verify is it is good or not#endif //CHANGED
-
-	  pageTable[i].physicalPage = i+1;	// for now, phys page # = virtual page #
+	  // pageTable[i].physicalPage = i+1;	// for now, phys page =virtual page
+      pageTable[i].physicalPage = pageProvider->GetEmptyPage();
 #endif //CHANGED
 	  pageTable[i].valid = TRUE;
 	  pageTable[i].use = FALSE;
@@ -176,6 +174,8 @@ AddrSpace::AddrSpace (OpenFile * executable)
 
     DEBUG ('a', "There is %d free slots spaces in thread bitmap.\n",
 	   space_counter);
+    
+    machine->DumpMem("fork.svg");
 #endif
 }
 
@@ -193,6 +193,7 @@ AddrSpace::~AddrSpace ()
 #ifdef CHANGED
     delete bitmap;
     delete semThread;
+    delete pageProvider;
 #endif
     AddrSpaceList.Remove (this);
 } 
@@ -390,7 +391,7 @@ AddrSpace::AllocateUserStack ()
     DEBUG ('t', "New thread address is: %d\n", addr);
 
     return addr;
-}
+} 
 
 void
 AddrSpace::UnAllocateUserStack (int addr)
