@@ -5,7 +5,7 @@
 - Thomas Veloso
 
 ## Avancement
-*@Juliendauliac* `Action V.2ction II.4.`: manque le crash en cas de bitmap pleins.
+*@TD* `Action II.1`: Un seul thread qui marche. Il faut le threadexit pour que les 2 marches ?.
 
 ## Sujet
 - [TD 0](http://dept-info.labri.fr/~guermouc/SE/files/devoir0.pdf)
@@ -30,4 +30,7 @@ En cas de modifications ajouter
 - Moins de temps que les autres: nous n'avions pas de vacances
 - Manque les bonus
 - ajout d'un script de rendu des TD
+
+
+## TD 3
 

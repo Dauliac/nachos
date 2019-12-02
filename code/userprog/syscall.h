@@ -160,7 +160,7 @@ int ThreadCreate (void function (void *arg), void *arg);
 
 void ThreadExit (void);
 
-int ForkExec(const char*s);
+int ForkExec(const char *filename);
 
 #endif // CHANGED
 

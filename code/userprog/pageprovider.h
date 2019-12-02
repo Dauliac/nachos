@@ -7,7 +7,7 @@
 class PageProvider:dontcopythis
 {
   public:
-    PageProvider(unsigned int pagesNumber);	
+    PageProvider();	
      ~PageProvider ();
 
     int GetEmptyPage();

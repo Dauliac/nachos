@@ -36,7 +36,7 @@ SynchDisk *synchDisk;
 Machine *machine;		// user program memory and registers
 #ifdef CHANGED
 SynchConsole *synchconsole = NULL;
-
+PageProvider *pageProvider = NULL;
 // For multi threads
 Semaphore *semReader;
 Semaphore *semWriter;
@@ -189,6 +189,8 @@ Initialize (int argc, char **argv)
 #ifdef CHANGED
     synchconsole = new SynchConsole (NULL, NULL);
 
+    pageProvider = new PageProvider();
+
     semReader = new Semaphore ("semaphoreReader", 1);
     semWriter = new Semaphore ("semaphoreWriter", 1);
 #endif //CHANGED
@@ -238,6 +240,7 @@ Cleanup ()
     machine = NULL;
 #ifdef CHANGED
     delete synchconsole;
+    delete pageProvider;
 #endif //CHANGED
 #endif
 

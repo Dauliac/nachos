@@ -186,9 +186,18 @@ ExceptionHandler (ExceptionType which)
 			case SC_ForkExec:
 		    {
 			DEBUG ('s', "ForkExec, by user program.\n");
-			char filename = (char)machine->ReadRegister (4);
-			ForkExec(&filename);
+			int from = machine->ReadRegister (4);
+			char *to = new char[MAX_STRING_SIZE];
+			int i = 0;
+			synchconsole->copyStringFromMachine (from +
+								       i, to,
+								       MAX_STRING_SIZE);
+			DEBUG ('s', "Filename to fork is: %s\n",to);
+			int result = ForkExec(to);
+			machine->WriteRegister (2, result);
+			delete[]to;
 			break;
+
 		    }
 
         case SC_Exit:

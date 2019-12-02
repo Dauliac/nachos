@@ -68,7 +68,6 @@ class AddrSpace:dontcopythis
 #ifdef CHANGED
     Semaphore *semAlloc;
     BitMap *bitmap;
-    PageProvider *pageProvider;
 
     static void ReadAtVirtual (OpenFile *executable,int virtualAddr,int numBytes, int position, TranslationEntry *pageTable,unsigned numPages);
 #endif

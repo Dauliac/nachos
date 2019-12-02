@@ -14,6 +14,6 @@ struct Schmurtz
 
 extern int do_ThreadCreate (int function, int arg);
 extern int do_ThreadExit ();
-int ForkExec(const char*s);
+int ForkExec(const char*filename);
 #endif // USERTHREAD_H
 #endif // CHANGED

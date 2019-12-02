@@ -89,16 +89,45 @@ do_ThreadExit ()
     return 0;
 }
 
-int ForkExec(const char*s)
+void StartForkThread(void *)
 {
-			OpenFile *executable = fileSystem->Open(s);
+
+    currentThread->space->InitRegisters ();	// set the initial register values
+    currentThread->space->RestoreState ();	// load page table register
+
+    machine->DumpMem ("memory.svg");
+    machine->Run ();		// jump to the user progam
+    //Doupt
+    ASSERT (FALSE);		// machine->Run never returns;
+}
+
+int ForkExec(const char*filename)
+{
+			OpenFile *executable = fileSystem->Open(filename);
+
+      // Crash if invalid filename
+      if (executable == NULL)
+      {
+	      SetColor (stdout, ColorRed);
+	      SetBold (stdout);
+	      printf ("Unable to open file %s\n", filename);
+	      ClearColor (stdout);
+	      return 1;
+      }
+      // Create new mem space for fork
 			AddrSpace *space;
 			space = new AddrSpace (executable);
-      currentThread->space = space;
+
+      Thread *fork = new Thread ("Thread fork");
+
+      fork->space = space;
+      //Start fork thread
+      fork->Start (StartForkThread, NULL);
+
 
       delete executable;
-      machine->DumpMem ("memory.svg");
-      machine->Run ();
+
+      return 0;
 }
 
 

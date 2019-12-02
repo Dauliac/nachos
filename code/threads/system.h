@@ -17,7 +17,7 @@
 #include "timer.h"
 
 #ifdef CHANGED
-#define MAX_STRING_SIZE 5
+#define MAX_STRING_SIZE 35
 #endif //CHANGED
 
 // Initialization and cleanup routines
@@ -63,6 +63,8 @@ extern PostOffice *postOffice;
 #ifdef USER_PROGRAM
 #include "synchconsole.h"
 extern SynchConsole *synchconsole;
+#include "pageprovider.h"
+extern  PageProvider *pageProvider;
 #endif
 
 #endif // SYSTEM_H
