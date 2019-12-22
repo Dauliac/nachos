@@ -16,7 +16,5 @@ int
 main ()
 {
     print ('a', 1);
-    // Remove me when forkExit is done
-    while(1);
-    return 1;
+    return 0;
 }

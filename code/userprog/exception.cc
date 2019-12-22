@@ -41,6 +41,11 @@ UpdatePC ()
     machine->WriteRegister (NextPCReg, pc);
 }
 
+#ifdef CHANGED
+// TODO move me into userthreads.cc ?
+// TODO semaphore me
+int processNumber = 0;
+#endif
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -155,7 +160,7 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_PutInt:
 		    {
-			DEBUG ('s', "PutInt, by user program.\n");
+			DEBUG ('s', "PUTINT: by user program.\n");
 			semWriter->P ();
 			int result = machine->ReadRegister (4);
 			synchconsole->SynchPutInt (result);
@@ -165,12 +170,12 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_ThreadCreate:
 		    {
-			DEBUG ('s', "Create thread, by user program.\n");
+			DEBUG ('s', "THREADCREATE: by user program.\n");
 			semReader->P ();
 			int function = machine->ReadRegister (4);
 			int arg = machine->ReadRegister (5);
 			int result = do_ThreadCreate (function, arg);
-			DEBUG ('s', "Create thread return: %d.\n", result);
+			DEBUG ('s', "THREADCREATE: return: %d.\n", result);
 			machine->WriteRegister (2, result);
 			semReader->V ();
 			break;
@@ -178,23 +183,28 @@ ExceptionHandler (ExceptionType which)
 
 		case SC_ThreadExit:
 		    {
-			DEBUG ('s', "Exit thread, by user program.\n");
+			DEBUG ('s', "THREADEXIT: by user program.\n");
 			do_ThreadExit ();
 			break;
 		    }
 
 			case SC_ForkExec:
 		    {
-			DEBUG ('s', "ForkExec, by user program.\n");
+			DEBUG ('s', "FORKEXEC, by user program.\n");
 			int from = machine->ReadRegister (4);
 			char *to = new char[MAX_STRING_SIZE];
 			int i = 0;
 			synchconsole->copyStringFromMachine (from +
 								       i, to,
 								       MAX_STRING_SIZE);
-			DEBUG ('s', "Filename to fork is: %s\n",to);
+			DEBUG ('s', "FORKEXEC: Filename to fork is: %s\n", to);
 			int result = ForkExec(to);
+
+            processNumber++;
+			DEBUG ('s', "FORKEXEC: there is  %i process\n", processNumber);
+
 			machine->WriteRegister (2, result);
+
 			delete[]to;
 			break;
 
@@ -202,12 +212,23 @@ ExceptionHandler (ExceptionType which)
 
         case SC_Exit:
 		    {
-			DEBUG ('s', "Exit, by user program.\n");
+			DEBUG ('s', "EXIT: by user program.\n");
 			int code = machine->ReadRegister (4);
-            if (code != 1) {
-                printf("Error code %i", code);
+            // Unix style, show error if !=0
+            if (code != 0) {
+                printf("EXIT: Error code %i", code);
             }
-	        interrupt->Halt ();
+
+            processNumber--;
+			DEBUG ('s', "EXIT: %i staying process.\n", processNumber);
+            if (processNumber == 0) {
+			    DEBUG ('s', "EXIT: Last process, we stop the machine.\n");
+	            interrupt->Halt ();
+            } else {
+			    DEBUG ('s', "EXIT: Stop process\n");
+                delete currentThread->space;
+                currentThread->Finish();
+            }
 			break;
 		    }
 
