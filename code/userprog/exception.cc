@@ -226,7 +226,8 @@ ExceptionHandler (ExceptionType which)
 	            interrupt->Halt ();
             } else {
 			    DEBUG ('s', "EXIT: Stop process\n");
-                delete currentThread->space;
+				currentThread->space = NULL;//à voir si cela suffit
+                //delete currentThread->space;
                 currentThread->Finish();
             }
 			break;
