@@ -103,31 +103,40 @@ void StartForkThread(void *)
 
 int ForkExec(const char*filename)
 {
-			OpenFile *executable = fileSystem->Open(filename);
+    OpenFile *executable = fileSystem->Open(filename);
 
-      // Crash if invalid filename
-      if (executable == NULL)
-      {
-	      SetColor (stdout, ColorRed);
-	      SetBold (stdout);
-	      printf ("Unable to open file %s\n", filename);
-	      ClearColor (stdout);
-	      return 1;
-      }
-      // Create new mem space for fork
-			AddrSpace *space;
-			space = new AddrSpace (executable);
+    // Crash if invalid filename
+    if (executable == NULL)
+    {
+        SetColor (stdout, ColorRed);
+        SetBold (stdout);
+        printf ("Unable to open file %s\n", filename);
+        ClearColor (stdout);
+        return 1;
+    }
+    // Create new mem space for fork
+    AddrSpace *space;
+    space = new AddrSpace (executable);
 
-      Thread *fork = new Thread ("Thread fork");
+    // Create new thread
+    Thread *fork = new Thread ("Thread fork");
+    if (fork == NULL) {
+        DEBUG ('t', "No way to create thread\n");
+        return -1;
+    }
+    fork->space = space;
 
-      fork->space = space;
-      //Start fork thread
-      fork->Start (StartForkThread, NULL);
+    //Start fork thread
+    fork->Start (StartForkThread, NULL);
+
+    currentThread->space->semThread->P ();
+    currentThread->space->threadCounter++;
+    currentThread->space->semThread->V ();
 
 
-      delete executable;
+    delete executable;
 
-      return 0;
+    return currentThread->space->threadCounter;
 }
 
 

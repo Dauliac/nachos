@@ -24,9 +24,7 @@ int PageProvider::GetEmptyPage()
     memset(machine->mainMemory + page * PageSize, 0, PageSize);
     //memset(machine->mainMemory + page * PageSize, 0, PageSize);
     return page;
-    
-    
-    
+
 }
 
 void PageProvider::ReleasePage(int numPage)
