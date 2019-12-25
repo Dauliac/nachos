@@ -65,6 +65,8 @@ extern PostOffice *postOffice;
 extern SynchConsole *synchconsole;
 #include "pageprovider.h"
 extern  PageProvider *pageProvider;
+
+extern int nbProcess;
 #endif
 
 #endif // SYSTEM_H

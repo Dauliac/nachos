@@ -46,7 +46,7 @@ SwapHeader (NoffHeader * noffH)
     noffH->initData.inFileAddr = WordToHost (noffH->initData.inFileAddr);
     noffH->uninitData.size = WordToHost (noffH->uninitData.size);
     noffH->uninitData.virtualAddr =
-	WordToHost (noffH->uninitData.virtualAddr);
+    WordToHost (noffH->uninitData.virtualAddr);
     noffH->uninitData.inFileAddr = WordToHost (noffH->uninitData.inFileAddr);
 }
 
@@ -88,12 +88,17 @@ AddrSpace::AddrSpace (OpenFile * executable)
     numPages = divRoundUp (size, PageSize);
     size = numPages * PageSize;
 
+    // check if the number of page available is enough
+    if (numPages > (unsigned int) pageProvider->NumAvailPage())
+    throw std::bad_alloc ();
+
     // check we're not trying
     // to run anything too big --
     // at least until we have
     // virtual memory
     if (numPages > NumPhysPages)
 	throw std::bad_alloc ();
+
 
     DEBUG ('a', "Initializing address space, num pages %d, total size 0x%x\n",
 	   numPages, size);
@@ -171,7 +176,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
 
     DEBUG ('a', "There is %d free slots spaces in thread bitmap.\n",
 	   space_counter);
-    
+
     machine->DumpMem("fork.svg");
 #endif
 }
@@ -193,7 +198,7 @@ AddrSpace::~AddrSpace ()
     delete pageProvider;
 #endif
     AddrSpaceList.Remove (this);
-} 
+}
 
 //----------------------------------------------------------------------
 // AddrSpace::InitRegisters
@@ -373,8 +378,8 @@ AddrSpace::AllocateUserStack ()
 
     if (foundedAddr < 1)
       {
-	  DEBUG ('t', "No Bitmap to distribute: %d\n");
-	  //TODO: crash nachos
+    DEBUG ('t', "No Bitmap to distribute: %d\n");
+    //TODO: crash nachos
       }
     DEBUG ('t', "Bitmap found: %d\n", foundedAddr);
 
@@ -388,7 +393,7 @@ AddrSpace::AllocateUserStack ()
     DEBUG ('t', "New thread address is: %d\n", addr);
 
     return addr;
-} 
+}
 
 void
 AddrSpace::UnAllocateUserStack (int addr)

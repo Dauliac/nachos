@@ -40,6 +40,8 @@ PageProvider *pageProvider = NULL;
 // For multi threads
 Semaphore *semReader;
 Semaphore *semWriter;
+
+int nbProcess;
 #endif //CHANGED
 #endif
 

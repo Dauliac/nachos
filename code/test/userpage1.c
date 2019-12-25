@@ -1,8 +1,8 @@
 #include "syscall.h"
 #define THIS "aaa"
 #define THAT "bbb"
-const int N = 10;
 
+const int N = 15;
 // Choose it large enough!
 void puts(const char*s){
     const char*p;
@@ -18,7 +18,7 @@ void f(void*arg){
 }
 
 int main(){
-    ThreadCreate(f, 'd');
-    f('a');
+    ThreadCreate(f, THIS);
+    f(THAT);
     ThreadExit();
 }

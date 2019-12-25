@@ -4,10 +4,12 @@
 #include "userthread.h"
 #include "system.h"
 #include "synch.h"
+#include "new"
 #include "syscall.h"
 
-//static int threadCounter = 1;
-//static Semaphore *semThread = new Semaphore ("semaphore_thread_counter", 1);
+static Semaphore *semNbProcess = new Semaphore("semaphore_nb_threads", 1);
+static Semaphore *semGetMem = new Semaphore("semaphore_getmem", 0);
+static Semaphore *semMemZone = new Semaphore("semaphore_memalloc_zone", 1);
 
 static void
 StartUserThread (void *schmurtz)
@@ -70,22 +72,36 @@ do_ThreadCreate (int function, int arg)
 int
 do_ThreadExit ()
 {
+
     currentThread->space->semThread->P ();
     currentThread->space->threadCounter--;
     currentThread->space->semThread->V ();
-    DEBUG ('t', "Surviving threads number:  %d\n", currentThread->space->threadCounter);
 
-    if (currentThread->space->threadCounter > 0)
-      {
-	  int addr = machine->ReadRegister (StackReg);
-	  DEBUG ('t', "The next addr will be unallocated:  %d\n", addr);
-	  currentThread->space->UnAllocateUserStack(addr);
-	  currentThread->Finish ();
-      }
-    else
-      {
-	  interrupt->Halt ();
-      }
+    DEBUG ('t', "THREAD: Surviving threads number:  %i\n", currentThread->space->threadCounter);
+
+    if (currentThread->space->threadCounter == 0)
+    {
+        semNbProcess->P();
+        nbProcess--;
+        semNbProcess->V();
+
+        DEBUG ('t', "PROCESS: Surviving process number:  %i\n", nbProcess);
+        if (nbProcess == 0) {
+            DEBUG ('t', "PROCESS: There is no surviving threads in any process\n");
+            interrupt->Halt ();
+        }
+    }
+
+    // If no conditions are met, it must be a thread that ends in a process
+
+    int addr = machine->ReadRegister (StackReg);
+    DEBUG ('t', "THREAD: The next addr will be unallocated:  %d\n", addr);
+    currentThread->space->UnAllocateUserStack(addr);
+    currentThread->Finish ();
+
+    // free waiting process
+    semGetMem->V();
+
     return 0;
 }
 
@@ -114,27 +130,44 @@ int ForkExec(const char*filename)
         ClearColor (stdout);
         return 1;
     }
+
     // Create new mem space for fork
     AddrSpace *space;
-    space = new AddrSpace (executable);
+
+    semMemZone->P();
+    try {
+        DEBUG ('t', "FORK: try to get memory\n");
+        space = new AddrSpace (executable);
+    }
+    catch (const std::bad_alloc& ba){
+        DEBUG ('t', "FORK: fail to get memory\n");
+        semGetMem->P();
+        DEBUG ('t', "FORK: Get memory barrier is free\n");
+        space = new AddrSpace (executable);
+    }
+    semMemZone->V();
+    DEBUG ('t', "FORK: Out of get memory zone\n");
 
     // Create new thread
     Thread *fork = new Thread ("Thread fork");
     if (fork == NULL) {
-        DEBUG ('t', "No way to create thread\n");
+        DEBUG ('t', "FORK: No way to create thread\n");
         return -1;
     }
+
+    //fork->space = space;
     fork->space = space;
+
+    semNbProcess->P();
+    nbProcess++;
+    semNbProcess->V();
+
+    DEBUG ('t', "FORK: tere is %i threads\n", nbProcess);
 
     //Start fork thread
     fork->Start (StartForkThread, NULL);
 
-    currentThread->space->semThread->P ();
-    currentThread->space->threadCounter++;
-    currentThread->space->semThread->V ();
-
-
-    delete executable;
+    //delete executable;
 
     return currentThread->space->threadCounter;
 }

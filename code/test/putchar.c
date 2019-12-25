@@ -6,9 +6,8 @@ print (char c, int n)
 #if 1
     for (i = 0; i < n; i++)
       {
-	  PutChar (c + i);
+      PutChar (c + i);
       }
-    PutChar ('\n');
 #endif
 }
 
@@ -16,5 +15,6 @@ int
 main ()
 {
     print ('a', 1);
-    return 0;
+    ThreadExit();
+    //return 0;
 }

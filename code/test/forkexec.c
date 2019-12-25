@@ -4,7 +4,7 @@ main()
     ForkExec("test/putchar");
     ForkExec("test/putchar");
     ForkExec("test/putchar");
-    //ForkExec("test/putchar");
+    ForkExec("test/putchar");
     while(1);
-    return 0;
+    //return 0;
 }

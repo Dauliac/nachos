@@ -44,7 +44,6 @@ UpdatePC ()
 #ifdef CHANGED
 // TODO move me into userthreads.cc ?
 // TODO semaphore me
-int processNumber = 0;
 #endif
 
 //----------------------------------------------------------------------
@@ -200,9 +199,6 @@ ExceptionHandler (ExceptionType which)
 			DEBUG ('s', "FORKEXEC: Filename to fork is: %s\n", to);
 			int result = ForkExec(to);
 
-            processNumber++;
-			DEBUG ('s', "FORKEXEC: there is  %i process\n", processNumber);
-
 			machine->WriteRegister (2, result);
 
 			delete[]to;
@@ -219,18 +215,8 @@ ExceptionHandler (ExceptionType which)
                 printf("EXIT: Error code %i", code);
             }
 
-            processNumber--;
-			DEBUG ('s', "EXIT: %i staying process.\n", processNumber);
-            if (processNumber == 0) {
-			    DEBUG ('s', "EXIT: Last process, we stop the machine.\n");
-	            interrupt->Halt ();
-            } else {
-			    DEBUG ('s', "EXIT: Stop process\n");
-				currentThread->space = NULL;//à voir si cela suffit
-                //delete currentThread->space;
-                currentThread->Finish();
-            }
-			break;
+            interrupt->Halt ();
+          break;
 		    }
 
 #endif // CHANGED

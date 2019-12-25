@@ -18,7 +18,7 @@ int PageProvider::GetEmptyPage()
 {
     //DEBUG ('a', "Allocated page: %i\n", page);
     int page = pageMap->Find();
-    ASSERT(page != -1);
+    //ASSERT(page != -1);
     DEBUG ('a', "Allocated page: %i\n", page);
     DEBUG ('a', "NumAvailPage : %i\n", this->NumAvailPage());
     memset(machine->mainMemory + page * PageSize, 0, PageSize);
