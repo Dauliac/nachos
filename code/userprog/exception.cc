@@ -214,8 +214,10 @@ ExceptionHandler (ExceptionType which)
             if (code != 0) {
                 printf("EXIT: Error code %i", code);
             }
+			
+			int result = do_ThreadExit();
 
-            interrupt->Halt ();
+            //interrupt->Halt ();
           break;
 		    }
 
