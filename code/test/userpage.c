@@ -1,6 +1,6 @@
 #include "syscall.h"
 
-const int N = 30;
+const int N = 10;
 
 int main(){
     int i = 0;
@@ -9,6 +9,17 @@ int main(){
         ForkExec("test/userpage0");
         ForkExec("test/userpage0");
         ForkExec("test/userpage0");
+        ForkExec("test/userpage0");
+        ForkExec("test/userpage0");
+        ForkExec("test/userpage0");
+        ForkExec("test/userpage0");
+        ForkExec("test/userpage0");
+        ForkExec("test/userpage0");
+        ForkExec("test/userpage1");
+        ForkExec("test/userpage1");
+        ForkExec("test/userpage1");
+        ForkExec("test/userpage1");
+        ForkExec("test/userpage1");
         ForkExec("test/userpage1");
         ForkExec("test/userpage1");
         ForkExec("test/userpage1");

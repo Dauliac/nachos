@@ -8,8 +8,8 @@
 #include "syscall.h"
 
 static Semaphore *semNbProcess = new Semaphore("semaphore_nb_threads", 1);
-static Semaphore *semGetMem = new Semaphore("semaphore_getmem", 0);
-static Semaphore *semMemZone = new Semaphore("semaphore_memalloc_zone", 1);
+// static Semaphore *semGetMem = new Semaphore("semaphore_getmem", 0);
+// static Semaphore *semMemZone = new Semaphore("semaphore_memalloc_zone", 1);
 
 static void
 StartUserThread (void *schmurtz)
@@ -100,7 +100,7 @@ do_ThreadExit ()
     currentThread->Finish ();
 
     // free waiting process
-    semGetMem->V();
+    // semGetMem->V();
 
     return 0;
 }
@@ -134,18 +134,19 @@ int ForkExec(const char*filename)
     // Create new mem space for fork
     AddrSpace *space;
 
-    semMemZone->P();
-    try {
-        DEBUG ('t', "FORK: try to get memory\n");
-        space = new AddrSpace (executable);
-    }
-    catch (const std::bad_alloc& ba){
-        DEBUG ('t', "FORK: fail to get memory\n");
-        semGetMem->P();
-        DEBUG ('t', "FORK: Get memory barrier is free\n");
-        space = new AddrSpace (executable);
-    }
-    semMemZone->V();
+    space = new AddrSpace (executable);
+    // semMemZone->P();
+    // try {
+    //     DEBUG ('t', "FORK: try to get memory\n");
+    //     space = new AddrSpace (executable);
+    // }
+    // catch (const std::bad_alloc& ba){
+    //     DEBUG ('t', "FORK: fail to get memory\n");
+    //     semGetMem->P();
+    //     DEBUG ('t', "FORK: Get memory barrier is free\n");
+    //     space = new AddrSpace (executable);
+    // }
+    // semMemZone->V();
     DEBUG ('t', "FORK: Out of get memory zone\n");
 
     // Create new thread
