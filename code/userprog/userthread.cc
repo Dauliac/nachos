@@ -7,7 +7,7 @@
 #include "new"
 #include "syscall.h"
 
-static Semaphore *semNbProcess = new Semaphore("semaphore_nb_threads", 1);
+Semaphore *semNbProcess = new Semaphore("semaphore_nb_threads", 1);
 // static Semaphore *semGetMem = new Semaphore("semaphore_getmem", 0);
 // static Semaphore *semMemZone = new Semaphore("semaphore_memalloc_zone", 1);
 

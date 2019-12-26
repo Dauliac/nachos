@@ -16,4 +16,3 @@ Pourquoi faut-il unseul objet de cette classePageProvider?On pourra donc le cré
 
 Y'a qu'une seule zone memoire donc si il y avait plus de une instance de cette classe, ils pouraient donner, des zones déja allouées et ou mal gérer la mémoire.
 
-

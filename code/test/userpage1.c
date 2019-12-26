@@ -2,7 +2,7 @@
 #define THIS "aaa"
 #define THAT "bbb"
 
-const int N = 15;
+const int N = 20;
 // Choose it large enough!
 void puts(const char*s){
     const char*p;

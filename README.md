@@ -5,7 +5,7 @@
 - Thomas Veloso
 
 ## Avancement
-*@TD* `Action II.1`: Un seul thread qui marche. Il faut le threadexit pour que les 2 marches ?.
+- Action II.2. Ajout de `processNumber` dans `exception.cc` Je ne suis pas sure pour l'implémentation mais l'idée me semble bien
 
 ## Sujet
 - [TD 0](http://dept-info.labri.fr/~guermouc/SE/files/devoir0.pdf)

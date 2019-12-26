@@ -2,7 +2,7 @@
 
 int main() {
     int i;
-    int MAX = 15;
+    int MAX = 20;
     for (i = 0; i < MAX; i++)
       {
         PutChar('a');

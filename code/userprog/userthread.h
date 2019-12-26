@@ -12,6 +12,8 @@ struct Schmurtz
     int arg;
 };
 
+extern Semaphore *semNbProcess;
+
 extern int do_ThreadCreate (int function, int arg);
 extern int do_ThreadExit ();
 extern int nbProcess;
